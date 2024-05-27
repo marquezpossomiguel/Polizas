@@ -11,6 +11,7 @@ public class App {
     public static void main( String[] args ) {
         Scanner scanner = new Scanner(System.in);
         SistemaPolizas sistemaPolizas = new SistemaPolizas();
+        sistemaPolizas.setNombre("PUJ");
         RepositorioPolizas repositorioPolizas = new RepositorioPolizas();
         String usuarioCuenta = null;
         String contraseniaCuenta = null;
@@ -72,12 +73,12 @@ public class App {
             switch (opcionMenu) {
                 case 1:
                     System.out.println("-----------------");
-                    iniciarRegistroCita(sistemaPolizas, repositorioPolizas, usuarioLogIn, scanner);
+                    opcionA(sistemaPolizas, repositorioPolizas, usuarioLogIn, scanner);
                     System.out.println();
                     break;
                 case 2:
                     System.out.println("-----------------");
-
+                    actualizarMontoPagado();
                     System.out.println();
                     break;
                 default:
@@ -89,7 +90,46 @@ public class App {
         } while (true);
     }
 
-    public static void iniciarRegistroCita(SistemaPolizas sistemaPolizas, RepositorioPolizas repositorioPolizas, MiembroPersonal miembroPersonal, Scanner scanner) {
+    public static void iniciarRegistroCita(SistemaPolizas sistemaPolizas, RepositorioPolizas repositorioPolizas, MiembroPersonal miembroPersonal, Scanner scanner){
+        Integer idPaciente;
+        java.sql.Date fechaActual = new java.sql.Date(new Date().getTime());
+        Cita cita = new Cita();
+
+        sistemaPolizas.mostrarPacientes();
+        System.out.println("Digite el id del paciente: ");
+        idPaciente = scanner.nextInt();
+        scanner.nextLine();
+        cita.setPaciente(sistemaPolizas.buscarPaciente(idPaciente));
+        cita.setMiembroPersonal(miembroPersonal);
+        cita.setFechaProgramada(fechaActual);
+        repositorioPolizas.insertarCita(cita);
+    }
+
+    public static void agregarReclamoCita(){
+
+    }
+
+    public static void listarReclamosCita(){
+
+    }
+
+    public static void eliminarReclamoCita(){
+
+    }
+
+    public static void modificarMontoReclamadoReclamoCita(){
+
+    }
+
+    public static void totalizarCita(){
+
+    }
+
+    public static void consultarCitasAlmacenadas(){
+
+    }
+
+    public static void opcionA(SistemaPolizas sistemaPolizas, RepositorioPolizas repositorioPolizas, MiembroPersonal miembroPersonal, Scanner scanner) {
         boolean opcionCorrecta;
         int opcionMenu = -1;
         do {
@@ -116,11 +156,37 @@ public class App {
             switch (opcionMenu) {
                 case 1:
                     System.out.println("-----------------");
-                    //iniciarRegistroCita(sistemaPolizas, repositorioPolizas, usuarioLogIn, scanner);
+                    iniciarRegistroCita();
                     System.out.println();
                     break;
                 case 2:
                     System.out.println("-----------------");
+                    agregarReclamoCita();
+                    System.out.println();
+                    break;
+                case 3:
+                    System.out.println("-----------------");
+                    listarReclamosCita();
+                    System.out.println();
+                    break;
+                case 4:
+                    System.out.println("-----------------");
+                    eliminarReclamoCita();
+                    System.out.println();
+                    break;
+                case 5:
+                    System.out.println("-----------------");
+                    modificarMontoReclamadoReclamoCita();
+                    System.out.println();
+                    break;
+                case 6:
+                    System.out.println("-----------------");
+                    totalizarCita();
+                    System.out.println();
+                    break;
+                case 7:
+                    System.out.println("-----------------");
+                    consultarCitasAlmacenadas();
                     System.out.println();
                     break;
                 default:
@@ -130,44 +196,9 @@ public class App {
                     break;
             }
         } while (true);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*Integer idPaciente;
-        java.sql.Date fechaActual = new java.sql.Date(new Date().getTime());
-        Cita cita = new Cita();
-
-        sistemaPolizas.mostrarPacientes();
-        System.out.println("Digite el id del paciente: ");
-        idPaciente = scanner.nextInt();
-        scanner.nextLine();
-        cita.setPaciente(buscarPaciente(sistemaPolizas, idPaciente));
-        cita.setMiembroPersonal(miembroPersonal);
-        cita.setFechaProgramada(fechaActual);
-        repositorioPolizas.insertarCita(cita);*/
     }
 
-    public static Paciente buscarPaciente(SistemaPolizas sistemaPolizas, Integer idPaciente) {
-        for(Paciente paciente : sistemaPolizas.getPacientes()){
-            if(paciente.getId().equals(idPaciente)){
-                return paciente;
-            }
-        }
-        return null;
+    public static void actualizarMontoPagado(){
+
     }
 }

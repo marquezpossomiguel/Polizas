@@ -88,4 +88,13 @@ public class SistemaPolizas {
             System.out.println("-----------------------------------------------------------------");
         }
     }
+
+    public Paciente buscarPaciente(Integer idPaciente){
+        for (Paciente paciente : pacientes) {
+            if(paciente.getId().equals(idPaciente)){
+                return paciente;
+            }
+        }
+        return null;
+    }
 }

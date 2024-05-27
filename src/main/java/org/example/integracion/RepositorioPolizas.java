@@ -26,6 +26,11 @@ public class RepositorioPolizas {
         return codigoNoPago[idNoPago-1];
     }
 
+    public String cobertura(Integer idCobertura){
+        String[] tipoCobertura = new String[]{"Salud", "Muerte"};
+        return tipoCobertura[idCobertura-1];
+    }
+
     public Paciente cargarPaciente(Integer idPaciente){
         String traerPaciente = "SELECT * FROM PACIENTE WHERE ID = ?";
         try{
