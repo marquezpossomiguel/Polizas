@@ -77,6 +77,7 @@ public class App {
                     break;
                 case 2:
                     System.out.println("-----------------");
+
                     System.out.println();
                     break;
                 default:
@@ -115,7 +116,7 @@ public class App {
             switch (opcionMenu) {
                 case 1:
                     System.out.println("-----------------");
-                    iniciarRegistroCita(sistemaPolizas, repositorioPolizas, usuarioLogIn, scanner);
+                    //iniciarRegistroCita(sistemaPolizas, repositorioPolizas, usuarioLogIn, scanner);
                     System.out.println();
                     break;
                 case 2:
@@ -147,7 +148,7 @@ public class App {
 
 
 
-        Integer idPaciente;
+        /*Integer idPaciente;
         java.sql.Date fechaActual = new java.sql.Date(new Date().getTime());
         Cita cita = new Cita();
 
@@ -158,7 +159,7 @@ public class App {
         cita.setPaciente(buscarPaciente(sistemaPolizas, idPaciente));
         cita.setMiembroPersonal(miembroPersonal);
         cita.setFechaProgramada(fechaActual);
-        repositorioPolizas.insertarCita(cita);
+        repositorioPolizas.insertarCita(cita);*/
     }
 
     public static Paciente buscarPaciente(SistemaPolizas sistemaPolizas, Integer idPaciente) {

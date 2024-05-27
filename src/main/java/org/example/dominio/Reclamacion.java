@@ -3,6 +3,7 @@ package org.example.dominio;
 import java.sql.Date;
 
 public class Reclamacion {
+    //Atributos de instancia
     private Integer id;
     private String accion;
     private java.sql.Date fechaIncidente;
@@ -15,6 +16,25 @@ public class Reclamacion {
     private Cita cita;
     private Poliza poliza;
 
+    //Métodos constructores
+    public Reclamacion() {
+    }
+
+    public Reclamacion(Integer id, String accion, Date fechaIncidente, Date fechaRegistro, Integer montoDemandado, Integer montoPagado, Date fechaPago, String codigoReclamacion, String codigoNoPago, Cita cita, Poliza poliza) {
+        this.id = id;
+        this.accion = accion;
+        this.fechaIncidente = fechaIncidente;
+        this.fechaRegistro = fechaRegistro;
+        this.montoDemandado = montoDemandado;
+        this.montoPagado = montoPagado;
+        this.fechaPago = fechaPago;
+        this.codigoReclamacion = codigoReclamacion;
+        this.codigoNoPago = codigoNoPago;
+        this.cita = cita;
+        this.poliza = poliza;
+    }
+
+    //Métodos de acceso
     public Integer getId() {
         return id;
     }

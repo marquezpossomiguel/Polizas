@@ -1,9 +1,10 @@
 package org.example.dominio;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public class Paciente {
+    //Atributos de instancia
     private Integer id;
     private Integer cedula;
     private String nombre;
@@ -12,9 +13,21 @@ public class Paciente {
     private String direccion;
     private List<Cita> citas;
 
+    //Métodos constructores
     public Paciente() {
     }
 
+    public Paciente(Integer id, Integer cedula, String nombre, String sexo, Date fechaNacimiento, String direccion, List<Cita> citas) {
+        this.id = id;
+        this.cedula = cedula;
+        this.nombre = nombre;
+        this.sexo = sexo;
+        this.fechaNacimiento = fechaNacimiento;
+        this.direccion = direccion;
+        this.citas = citas;
+    }
+
+    //Métodos de acceso
     public Integer getId() {
         return id;
     }
@@ -51,7 +64,7 @@ public class Paciente {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(java.sql.Date fechaNacimiento) {
+    public void setFechaNacimiento(Date fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 

@@ -3,6 +3,7 @@ package org.example.dominio;
 import java.util.List;
 
 public class SistemaPolizas {
+    //Atributos de instancia
     private String nombre;
     private List<Paciente> pacientes;
     private List<MiembroPersonal> miembrosPersonal;
@@ -10,6 +11,20 @@ public class SistemaPolizas {
     private List<Poliza> polizas;
     private List<Reclamacion> reclamaciones;
 
+    //Métodos constructores
+    public SistemaPolizas() {
+    }
+
+    public SistemaPolizas(String nombre, List<Paciente> pacientes, List<MiembroPersonal> miembrosPersonal, List<Cita> citas, List<Poliza> polizas, List<Reclamacion> reclamaciones) {
+        this.nombre = nombre;
+        this.pacientes = pacientes;
+        this.miembrosPersonal = miembrosPersonal;
+        this.citas = citas;
+        this.polizas = polizas;
+        this.reclamaciones = reclamaciones;
+    }
+
+    //Métodos de acceso
     public String getNombre() {
         return nombre;
     }
@@ -18,20 +33,20 @@ public class SistemaPolizas {
         this.nombre = nombre;
     }
 
-    public List<MiembroPersonal> getMiembrosPersonal() {
-        return miembrosPersonal;
-    }
-
-    public void setMiembrosPersonal(List<MiembroPersonal> miembrosPersonal) {
-        this.miembrosPersonal = miembrosPersonal;
-    }
-
     public List<Paciente> getPacientes() {
         return pacientes;
     }
 
     public void setPacientes(List<Paciente> pacientes) {
         this.pacientes = pacientes;
+    }
+
+    public List<MiembroPersonal> getMiembrosPersonal() {
+        return miembrosPersonal;
+    }
+
+    public void setMiembrosPersonal(List<MiembroPersonal> miembrosPersonal) {
+        this.miembrosPersonal = miembrosPersonal;
     }
 
     public List<Cita> getCitas() {
@@ -58,6 +73,7 @@ public class SistemaPolizas {
         this.reclamaciones = reclamaciones;
     }
 
+    //Métodos de instancia
     public void mostrarPacientes() {
         System.out.println("-----------------------------------------------------------------");
         System.out.println("PACIENTES");

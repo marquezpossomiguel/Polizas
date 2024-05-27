@@ -3,15 +3,32 @@ package org.example.dominio;
 import java.util.List;
 
 public class MiembroPersonal {
+    //Atributos de instancia
     private Integer id;
     private Integer cedula;
     private String nombre;
-    private String direccion;
-    private String contrasenia;
     private String sexo;
+    private String direccion;
     private String cargo;
+    private String contrasenia;
     private List<Cita> citas;
 
+    //Métodos constructores
+    public MiembroPersonal() {
+    }
+
+    public MiembroPersonal(Integer id, Integer cedula, String nombre, String sexo, String direccion, String cargo, String contrasenia, List<Cita> citas) {
+        this.id = id;
+        this.cedula = cedula;
+        this.nombre = nombre;
+        this.sexo = sexo;
+        this.direccion = direccion;
+        this.cargo = cargo;
+        this.contrasenia = contrasenia;
+        this.citas = citas;
+    }
+
+    //Métodos de acceso
     public Integer getId() {
         return id;
     }
@@ -36,14 +53,6 @@ public class MiembroPersonal {
         this.nombre = nombre;
     }
 
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
     public String getSexo() {
         return sexo;
     }
@@ -52,12 +61,12 @@ public class MiembroPersonal {
         this.sexo = sexo;
     }
 
-    public String getContrasenia() {
-        return contrasenia;
+    public String getDireccion() {
+        return direccion;
     }
 
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     public String getCargo() {
@@ -66,6 +75,14 @@ public class MiembroPersonal {
 
     public void setCargo(String cargo) {
         this.cargo = cargo;
+    }
+
+    public String getContrasenia() {
+        return contrasenia;
+    }
+
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
     }
 
     public List<Cita> getCitas() {
