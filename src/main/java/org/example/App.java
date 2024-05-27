@@ -156,7 +156,7 @@ public class App {
             switch (opcionMenu) {
                 case 1:
                     System.out.println("-----------------");
-                    iniciarRegistroCita();
+                    iniciarRegistroCita(sistemaPolizas, repositorioPolizas, miembroPersonal, scanner);
                     System.out.println();
                     break;
                 case 2:
