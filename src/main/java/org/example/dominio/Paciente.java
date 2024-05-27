@@ -8,7 +8,7 @@ public class Paciente {
     private Integer cedula;
     private String nombre;
     private String sexo;
-    private Date fechaNacimiento;
+    private java.sql.Date fechaNacimiento;
     private String direccion;
     private List<Cita> citas;
 
@@ -51,7 +51,7 @@ public class Paciente {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
+    public void setFechaNacimiento(java.sql.Date fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 

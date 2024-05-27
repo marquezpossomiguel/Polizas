@@ -4,8 +4,11 @@ import java.util.List;
 
 public class SistemaPolizas {
     private String nombre;
-    List<Paciente> pacientes;
-    List<MiembroPersonal> miembrosPersonal;
+    private List<Paciente> pacientes;
+    private List<MiembroPersonal> miembrosPersonal;
+    private List<Cita> citas;
+    private List<Poliza> polizas;
+    private List<Reclamacion> reclamaciones;
 
     public String getNombre() {
         return nombre;
@@ -29,6 +32,30 @@ public class SistemaPolizas {
 
     public void setPacientes(List<Paciente> pacientes) {
         this.pacientes = pacientes;
+    }
+
+    public List<Cita> getCitas() {
+        return citas;
+    }
+
+    public void setCitas(List<Cita> citas) {
+        this.citas = citas;
+    }
+
+    public List<Poliza> getPolizas() {
+        return polizas;
+    }
+
+    public void setPolizas(List<Poliza> polizas) {
+        this.polizas = polizas;
+    }
+
+    public List<Reclamacion> getReclamaciones() {
+        return reclamaciones;
+    }
+
+    public void setReclamaciones(List<Reclamacion> reclamaciones) {
+        this.reclamaciones = reclamaciones;
     }
 
     public void mostrarPacientes() {

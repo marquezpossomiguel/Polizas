@@ -1,5 +1,7 @@
 package org.example.dominio;
 
+import java.util.List;
+
 public class MiembroPersonal {
     private Integer id;
     private Integer cedula;
@@ -8,6 +10,7 @@ public class MiembroPersonal {
     private String contrasenia;
     private String sexo;
     private String cargo;
+    private List<Cita> citas;
 
     public Integer getId() {
         return id;
@@ -63,5 +66,13 @@ public class MiembroPersonal {
 
     public void setCargo(String cargo) {
         this.cargo = cargo;
+    }
+
+    public List<Cita> getCitas() {
+        return citas;
+    }
+
+    public void setCitas(List<Cita> citas) {
+        this.citas = citas;
     }
 }

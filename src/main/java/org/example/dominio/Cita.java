@@ -1,10 +1,11 @@
 package org.example.dominio;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public class Cita {
     private Integer id;
+    private java.sql.Date fechaProgramada;
     private java.sql.Date fechaRegistro;
     private Paciente paciente;
     private MiembroPersonal miembroPersonal;
@@ -26,21 +27,6 @@ public class Cita {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public Integer getCostoConsulta() {
-        return costoConsulta;
-    }
-
-    public void setCostoConsulta(Integer costoConsulta) {
-        this.costoConsulta = costoConsulta;
-    }
-
-    public Integer getCostoPagado() {
-        return costoPagado;
-    }
-
-    public void setCostoPagado(Integer costoPagado) {
-        this.costoPagado = costoPagado;
-    }
 
     public Paciente getPaciente() {
         return paciente;
@@ -64,5 +50,13 @@ public class Cita {
 
     public void setMiembroPersonal(MiembroPersonal miembroPersonal) {
         this.miembroPersonal = miembroPersonal;
+    }
+
+    public Date getFechaProgramada() {
+        return fechaProgramada;
+    }
+
+    public void setFechaProgramada(Date fechaProgramada) {
+        this.fechaProgramada = fechaProgramada;
     }
 }
