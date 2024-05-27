@@ -1,44 +1,51 @@
 package org.example;
 
-import org.example.dominio.SistemaPolizas;
-import org.example.dominio.Usuario;
+import org.example.dominio.*;
+import org.example.integracion.RepositorioPolizas;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Scanner;
 
 public class App {
     public static void main( String[] args ) {
         Scanner scanner = new Scanner(System.in);
         SistemaPolizas sistemaPolizas = new SistemaPolizas();
+        RepositorioPolizas repositorioPolizas = new RepositorioPolizas();
         String usuarioCuenta = new String();
         String contraseniaCuenta = new String();
         boolean datoCorrecto;
-        boolean usuarioLogIn;
+        boolean usuarioEncontrado;
         boolean opcionCorrecta;
         int opcionMenu = -1;
-
-
+        MiembroPersonal usuarioLogIn = null;
+        repositorioPolizas.cargarMiembrosPersonal(sistemaPolizas.getMiembrosPersonal());
+        repositorioPolizas.cargarPacientes(sistemaPolizas.getPacientes());
 
         do {
             datoCorrecto = false;
-            usuarioLogIn = false;
+            usuarioEncontrado = false;
             while (datoCorrecto == false) {
                 try {
                     System.out.println("Digite el nombre de usuario: ");
                     usuarioCuenta = scanner.nextLine();
                     System.out.println("Digite la contrasenia: ");
+                    scanner.nextLine();
                     contraseniaCuenta = scanner.next();
+                    scanner.nextLine();
                     datoCorrecto = true;
                 } catch (Exception e) {
-                    System.out.println("Excepcion: " + e.getMessage());
+                    e.printStackTrace();
                     scanner.nextLine();
                 }
             }
-            for(Usuario usuario : sistemaPolizas.getUsuarios()){
-                if(usuario.getNombre().equals(usuarioCuenta) && usuario.getContrasenia().equals(contraseniaCuenta)){
-                    usuarioLogIn = true;
+            for (MiembroPersonal miembroPersonal : sistemaPolizas.getMiembrosPersonal()) {
+                if(miembroPersonal.getNombre().equals(usuarioCuenta) && miembroPersonal.getContrasenia().equals(contraseniaCuenta)){
+                    usuarioLogIn = miembroPersonal;
+                    usuarioEncontrado = true;
                 }
             }
-        } while (usuarioLogIn == false);
+        } while (usuarioEncontrado == false);
 
         do {
             opcionCorrecta = false;
@@ -52,9 +59,10 @@ public class App {
                 try {
                     System.out.print("Respuesta: ");
                     opcionMenu = scanner.nextInt();
+                    scanner.nextLine();
                     opcionCorrecta = true;
                 } catch (Exception e) {
-                    System.out.println("Excepcion: " + e.getMessage());
+                    e.printStackTrace();
                     scanner.nextLine();
                 }
             }
@@ -74,5 +82,26 @@ public class App {
                     break;
             }
         } while (true);
+    }
+
+    public void iniciarRegistroCita(SistemaPolizas sistemaPolizas, RepositorioPolizas repositorioPolizas, MiembroPersonal miembroPersonal, Scanner scanner) {
+        Integer idPaciente;
+        Cita cita = new Cita();
+        sistemaPolizas.mostrarPacientes();
+        System.out.println("Digite el id del paciente: ");
+        idPaciente = scanner.nextInt();
+        scanner.nextLine();
+        cita.setPaciente(buscarPaciente(sistemaPolizas, idPaciente));
+        cita.setMiembroPersonal(miembroPersonal);
+        repositorioPolizas.insertarCita(cita);
+    }
+
+    public Paciente buscarPaciente(SistemaPolizas sistemaPolizas, Integer idPaciente) {
+        for(Paciente paciente : sistemaPolizas.getPacientes()){
+            if(paciente.getId().equals(idPaciente)){
+                return paciente;
+            }
+        }
+        return null;
     }
 }

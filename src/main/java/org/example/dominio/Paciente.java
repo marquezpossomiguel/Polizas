@@ -7,26 +7,12 @@ public class Paciente {
     private Integer id;
     private Integer cedula;
     private String nombre;
-    private Sexo sexo;
+    private String sexo;
     private Date fechaNacimiento;
     private String direccion;
-    private List<Contacto> contacto;
-    private List<Alergia> alergias;
     private List<Cita> citas;
 
     public Paciente() {
-    }
-
-    public Paciente(Integer id, Integer cedula, String nombre, Sexo sexo, Date fechaNacimiento, String direccion, List<Contacto> contacto, List<Alergia> alergias, List<Cita> citas) {
-        this.id = id;
-        this.cedula = cedula;
-        this.nombre = nombre;
-        this.sexo = sexo;
-        this.fechaNacimiento = fechaNacimiento;
-        this.direccion = direccion;
-        this.contacto = contacto;
-        this.alergias = alergias;
-        this.citas = citas;
     }
 
     public Integer getId() {
@@ -53,11 +39,11 @@ public class Paciente {
         this.nombre = nombre;
     }
 
-    public Sexo getSexo() {
+    public String getSexo() {
         return sexo;
     }
 
-    public void setSexo(Sexo sexo) {
+    public void setSexo(String sexo) {
         this.sexo = sexo;
     }
 
@@ -75,22 +61,6 @@ public class Paciente {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
-    }
-
-    public List<Contacto> getContacto() {
-        return contacto;
-    }
-
-    public void setContacto(List<Contacto> contacto) {
-        this.contacto = contacto;
-    }
-
-    public List<Alergia> getAlergias() {
-        return alergias;
-    }
-
-    public void setAlergias(List<Alergia> alergias) {
-        this.alergias = alergias;
     }
 
     public List<Cita> getCitas() {

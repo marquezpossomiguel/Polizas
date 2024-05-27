@@ -6,6 +6,4 @@ public class Poliza {
     private Paciente paciente;
     private Integer tipoCobertura;
     private Integer cuotaMes;
-    private Municipio municipio;
-    CompaniaSeguros companiaSeguros;
 }
