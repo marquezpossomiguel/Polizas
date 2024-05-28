@@ -384,7 +384,7 @@ public class RepositorioPolizas {
                 Integer idPaciente = resultSet.getInt("ID_PACIENTE");
                 poliza.setPaciente(cargarPaciente(idPaciente));
                 Integer idCompaniaSeguros = resultSet.getInt("ID_COMPANIA_SEGUROS");
-                cargarCompaniaSeguros(idCompaniaSeguros);
+                poliza.setCompaniaSeguros(cargarCompaniaSeguros(idCompaniaSeguros));
                 Integer idCobertura = resultSet.getInt("ID_TIPO_COBERTURA");
                 poliza.setCobertura(cobertura(idCobertura));
                 cargarReclamaciones(poliza);
@@ -397,21 +397,38 @@ public class RepositorioPolizas {
 
     //-------------------------------------------------------------------------------------------
 
-    /*public void cargarReclamaciones(Cita cita){
-        String traerReclamaciones = "SELECT * FROM RECLAMACION WHERE ID_CITA = ?";
+    public void cargarReclamaciones(SistemaPolizas sistemaPolizas){
+        sistemaPolizas.getReclamaciones().clear();
+        String traerPolizas = "SELECT * FROM POLIZA";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(traerReclamaciones);
-            preparedStatement.setInt(1, cita.getId());
+            PreparedStatement preparedStatement = connection.prepareStatement(traerPolizas);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
                 Reclamacion reclamacion = new Reclamacion();
-
+                reclamacion.setId(resultSet.getInt("ID"));
+                reclamacion.setAccion(resultSet.getString("ACCION"));
+                reclamacion.setFechaIncidente(resultSet.getDate("FECHA_INCIDENTE"));
+                reclamacion.setFechaRegistro(resultSet.getDate("FECHA_REGISTRO"));
+                reclamacion.setMontoDemandado(resultSet.getInt("MONTO_DEMANDADO"));
+                reclamacion.setMontoPagado(resultSet.getInt("MONTO_PAGADO"));
+                reclamacion.setFechaPago(resultSet.getDate("FECHA_PAGO"));
+                Integer idReclamacion = resultSet.getInt("ID_CODIGO_RECLAMACION");
+                reclamacion.setCodigoReclamacion(reclamacion(idReclamacion));
+                Integer idNoPago = resultSet.getInt("ID_CODIGO_NO_PAGO");
+                reclamacion.setCodigoNoPago(noPago(idNoPago));
+                Integer idCita = resultSet.getInt("ID_CITA");
+                reclamacion.setCita(cargarCita(idCita));
+                Integer idPoliza = resultSet.getInt("ID_POLIZA");
+                reclamacion.setPoliza(cargarPoliza(idPoliza));
+                sistemaPolizas.getReclamaciones().add(reclamacion);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+
+    //-------------------------------------------------------------------------------------------
 
     public void insertarCita(Cita cita){
         String insertarCita = "INSERT INTO VALUES (ID_PACIENTE, ID_MIEMBRO_PERSONAL, FECHA_REGISTRO) VALUES (?, ?, ?)";
@@ -432,63 +449,4 @@ public class RepositorioPolizas {
             e.printStackTrace();
         }
     }
-
-    public void cargarCita(Reclamacion reclamacion){
-        String traerCitas = "SELECT * FROM CITA WHERE ID = ?";
-        try{
-            Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(traerCitas);
-            preparedStatement.setInt(1, reclamacion.getId());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
-                Cita cita = new Cita();
-                cita.setId(resultSet.getInt("ID"));
-                Integer idPaciente = resultSet.getInt("ID_PACIENTE");
-                cita.setPaciente(cargarPaciente(idPaciente));
-                Integer idMiembroPersonal = resultSet.getInt("ID_MIEMBRO_PERSONAL");
-                cita.setMiembroPersonal(cargarMiembroPersonal(idMiembroPersonal));
-                cita.setFechaProgramada(resultSet.getDate("FECHA_HORA_PROGRAMADA"));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void cargarReclamaciones(SistemaPolizas sistemaPolizas){
-        sistemaPolizas.getReclamaciones().clear();
-        String traerReclamaciones = "SELECT * FROM RECLAMACION";
-        try{
-            Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(traerReclamaciones);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
-                Reclamacion reclamacion = new Reclamacion();
-                reclamacion.setId(resultSet.getInt("ID"));
-                reclamacion.setMontoDemandado(resultSet.getInt("MONTO_DEMANDADO"));
-                reclamacion.setMontoPagado(resultSet.getInt("MONTO_PAGADO"));
-                Integer idCita = resultSet.getInt("ID_CITA");
-                cargarCita(reclamacion);
-                sistemaPolizas.getReclamaciones().add(reclamacion);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void cargarPolizas(SistemaPolizas sistemaPolizas){
-        sistemaPolizas.getPolizas().clear();
-        String traerPolizas = "SELECT * FROM POLIZA";
-        try{
-            Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(traerPolizas);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
-                Poliza poliza = new Poliza();
-                sistemaPolizas.getPolizas().add(poliza);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-     */
 }

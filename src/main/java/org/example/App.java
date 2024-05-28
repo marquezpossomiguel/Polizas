@@ -20,11 +20,7 @@ public class App {
         boolean opcionCorrecta;
         int opcionMenu = -1;
         MiembroPersonal usuarioLogIn = null;
-        repositorioPolizas.cargarMiembrosPersonal(sistemaPolizas);
-        repositorioPolizas.cargarPacientes(sistemaPolizas);
-        repositorioPolizas.cargarCitas(sistemaPolizas);
-        repositorioPolizas.cargarPolizas(sistemaPolizas);
-        //repositorioPolizas.cargarReclamaciones(sistemaPolizas);
+        actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
 
         do {
             datoCorrecto = false;
@@ -90,6 +86,14 @@ public class App {
         } while (true);
     }
 
+    public static void actulizarRepositorioPolizas(SistemaPolizas sistemaPolizas, RepositorioPolizas repositorioPolizas){
+        repositorioPolizas.cargarMiembrosPersonal(sistemaPolizas);
+        repositorioPolizas.cargarPacientes(sistemaPolizas);
+        repositorioPolizas.cargarCitas(sistemaPolizas);
+        repositorioPolizas.cargarPolizas(sistemaPolizas);
+        repositorioPolizas.cargarReclamaciones(sistemaPolizas);
+    }
+
     public static void iniciarRegistroCita(SistemaPolizas sistemaPolizas, RepositorioPolizas repositorioPolizas, MiembroPersonal miembroPersonal, Scanner scanner){
         Integer idPaciente;
         java.sql.Date fechaActual = new java.sql.Date(new Date().getTime());
@@ -102,7 +106,7 @@ public class App {
         cita.setPaciente(sistemaPolizas.buscarPaciente(idPaciente));
         cita.setMiembroPersonal(miembroPersonal);
         cita.setFechaProgramada(fechaActual);
-        //repositorioPolizas.insertarCita(cita);
+        repositorioPolizas.insertarCita(cita);
     }
 
     public static void agregarReclamoCita(){
@@ -157,36 +161,43 @@ public class App {
                 case 1:
                     System.out.println("-----------------");
                     iniciarRegistroCita(sistemaPolizas, repositorioPolizas, miembroPersonal, scanner);
+                    actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
                     System.out.println();
                     break;
                 case 2:
                     System.out.println("-----------------");
                     agregarReclamoCita();
+                    actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
                     System.out.println();
                     break;
                 case 3:
                     System.out.println("-----------------");
                     listarReclamosCita();
+                    actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
                     System.out.println();
                     break;
                 case 4:
                     System.out.println("-----------------");
                     eliminarReclamoCita();
+                    actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
                     System.out.println();
                     break;
                 case 5:
                     System.out.println("-----------------");
                     modificarMontoReclamadoReclamoCita();
+                    actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
                     System.out.println();
                     break;
                 case 6:
                     System.out.println("-----------------");
                     totalizarCita();
+                    actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
                     System.out.println();
                     break;
                 case 7:
                     System.out.println("-----------------");
                     consultarCitasAlmacenadas();
+                    actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
                     System.out.println();
                     break;
                 default:
