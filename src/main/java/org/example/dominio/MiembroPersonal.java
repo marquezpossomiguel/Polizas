@@ -5,7 +5,7 @@ import java.util.List;
 public class MiembroPersonal {
     //Atributos de instancia
     private Integer id;
-    private Integer cedula;
+    private Long cedula;
     private String nombre;
     private String sexo;
     private String direccion;
@@ -17,7 +17,7 @@ public class MiembroPersonal {
     public MiembroPersonal() {
     }
 
-    public MiembroPersonal(Integer id, Integer cedula, String nombre, String sexo, String direccion, String cargo, String contrasenia, List<Cita> citas) {
+    public MiembroPersonal(Integer id, Long cedula, String nombre, String sexo, String direccion, String cargo, String contrasenia, List<Cita> citas) {
         this.id = id;
         this.cedula = cedula;
         this.nombre = nombre;
@@ -37,11 +37,11 @@ public class MiembroPersonal {
         this.id = id;
     }
 
-    public Integer getCedula() {
+    public Long getCedula() {
         return cedula;
     }
 
-    public void setCedula(Integer cedula) {
+    public void setCedula(Long cedula) {
         this.cedula = cedula;
     }
 

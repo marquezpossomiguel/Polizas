@@ -3,31 +3,47 @@ package org.example.integracion;
 import org.example.dominio.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RepositorioPolizas {
     public String sexo(Integer idTipoSexo){
+        if(idTipoSexo.equals(0)){
+            return null;
+        }
         String[] tipoSexo = new String[]{"Hombre", "Mujer"};
         return tipoSexo[idTipoSexo-1];
     }
 
     public String cargo(Integer idTipoCargo){
-        String[] tipoCargo = new String[]{"Medico", "Enfermero"};
+        if(idTipoCargo.equals(0)){
+            return null;
+        }
+        String[] tipoCargo = new String[]{"Medico/a general", "Medico/a especialista", "Enfermero/a", "Psicologo/a Clinico"};
         return tipoCargo[idTipoCargo-1];
     }
 
     public String reclamacion(Integer idReclamacion){
-        String[] codigoReclamacion = new String[]{"Neglicencia", "Demora"};
+        if(idReclamacion.equals(0)){
+            return null;
+        }
+        String[] codigoReclamacion = new String[]{"Atencion preventiva", "Beneficios por incapacidad total y permanente", "Gastos medicos cubiertos", "Cobertura de enfermedades graves", "Cobertura de enfermedades terminales", "Hospitalizacion"};
         return codigoReclamacion[idReclamacion-1];
     }
 
     public String noPago(Integer idNoPago){
+        if(idNoPago.equals(0)){
+            return null;
+        }
         String[] codigoNoPago = new String[]{"Falta de plata", "Fuera de plazo"};
         return codigoNoPago[idNoPago-1];
     }
 
     public String cobertura(Integer idCobertura){
-        String[] tipoCobertura = new String[]{"Salud", "Muerte"};
+        if(idCobertura.equals(0)){
+            return null;
+        }
+        String[] tipoCobertura = new String[]{"Vida: Individual", "Vida: Grupo", "Vida: Accidentes personales", "Salud: Medicina prepagada", "Salud: Hospitalizacion", "Salud: Cirugia"};
         return tipoCobertura[idCobertura-1];
     }
 
@@ -43,7 +59,7 @@ public class RepositorioPolizas {
             Paciente paciente = new Paciente();
             if(resultSet.next()){
                 paciente.setId(resultSet.getInt("ID"));
-                paciente.setCedula(resultSet.getInt("CEDULA"));
+                paciente.setCedula(resultSet.getLong("CEDULA"));
                 paciente.setNombre(resultSet.getString("NOMBRE"));
                 Integer idTipoSexo = resultSet.getInt("ID_TIPO_SEXO");
                 paciente.setSexo(sexo(idTipoSexo));
@@ -68,7 +84,7 @@ public class RepositorioPolizas {
             CompaniaSeguros companiaSeguros = new CompaniaSeguros();
             if(resultSet.next()){
                 companiaSeguros.setId(resultSet.getInt("ID"));
-                companiaSeguros.setNit(resultSet.getInt("NIT"));
+                companiaSeguros.setNit(resultSet.getLong("NIT"));
                 companiaSeguros.setNombre(resultSet.getString("NOMBRE"));
                 companiaSeguros.setDireccion(resultSet.getString("DIRECCION"));
                 companiaSeguros.setDireccionIp(resultSet.getString("DIRECCION_IP"));
@@ -90,7 +106,7 @@ public class RepositorioPolizas {
             Poliza poliza = new Poliza();
             if(resultSet.next()){
                 poliza.setId(resultSet.getInt("ID"));
-                poliza.setNumero(resultSet.getInt("NUMERO"));
+                poliza.setNumero(resultSet.getLong("NUMERO"));
                 Integer idPaciente = resultSet.getInt("ID_PACIENTE");
                 poliza.setPaciente(cargarPaciente(idPaciente));
                 Integer idCompaniaSeguros = resultSet.getInt("ID_COMPANIA_SEGUROS");
@@ -106,7 +122,9 @@ public class RepositorioPolizas {
     }
 
     public void cargarReclamaciones(Cita cita){
-        if(cita.getReclamaciones() != null){
+        if (cita.getReclamaciones() == null) {
+            cita.setReclamaciones(new ArrayList<>());
+        } else {
             cita.getReclamaciones().clear();
         }
         String traerReclamaciones = "SELECT * FROM RECLAMACION WHERE ID_CITA = ?";
@@ -139,7 +157,9 @@ public class RepositorioPolizas {
     }
 
     public void cargarCitas(MiembroPersonal miembroPersonal){
-        if(miembroPersonal.getCitas() != null){
+        if (miembroPersonal.getCitas() == null) {
+            miembroPersonal.setCitas(new ArrayList<>());
+        } else {
             miembroPersonal.getCitas().clear();
         }
         String traerCitas = "SELECT * FROM CITA WHERE ID_MIEMBRO_PERSONAL = ?";
@@ -165,7 +185,9 @@ public class RepositorioPolizas {
     }
 
     public void cargarMiembrosPersonal(SistemaPolizas sistemaPolizas){
-        if(sistemaPolizas.getMiembrosPersonal()!=null){
+        if (sistemaPolizas.getMiembrosPersonal() == null) {
+            sistemaPolizas.setMiembrosPersonal(new ArrayList<>());
+        } else {
             sistemaPolizas.getMiembrosPersonal().clear();
         }
         String traerMiembrosPersonal = "SELECT * FROM MIEMBRO_PERSONAL";
@@ -176,13 +198,14 @@ public class RepositorioPolizas {
             while(resultSet.next()){
                 MiembroPersonal miembroPersonal = new MiembroPersonal();
                 miembroPersonal.setId(resultSet.getInt("ID"));
-                miembroPersonal.setCedula(resultSet.getInt("CEDULA"));
+                miembroPersonal.setCedula(resultSet.getLong("CEDULA"));
                 miembroPersonal.setNombre(resultSet.getString("NOMBRE"));
                 Integer idTipoSexo = resultSet.getInt("ID_TIPO_SEXO");
                 miembroPersonal.setSexo(sexo(idTipoSexo));
                 miembroPersonal.setDireccion(resultSet.getString("DIRECCION"));
                 Integer idTipoCargo = resultSet.getInt("ID_TIPO_CARGO");
                 miembroPersonal.setCargo(cargo(idTipoCargo));
+                miembroPersonal.setContrasenia(resultSet.getString("CONTRASENIA"));
                 cargarCitas(miembroPersonal);
                 sistemaPolizas.getMiembrosPersonal().add(miembroPersonal);
             }
@@ -194,7 +217,9 @@ public class RepositorioPolizas {
     //-------------------------------------------------------------------------------------------
 
     public void cargarPolizas(Paciente paciente){
-        if(paciente.getPolizas() != null){
+        if (paciente.getPolizas() == null) {
+            paciente.setPolizas(new ArrayList<>());
+        } else {
             paciente.getPolizas().clear();
         }
         String traerPolizas = "SELECT * FROM POLIZA WHERE ID_PACIENTE = ?";
@@ -206,7 +231,7 @@ public class RepositorioPolizas {
             while(resultSet.next()){
                 Poliza poliza = new Poliza();
                 poliza.setId(resultSet.getInt("ID"));
-                poliza.setNumero(resultSet.getInt("NUMERO"));
+                poliza.setNumero(resultSet.getLong("NUMERO"));
                 poliza.setPaciente(paciente);
                 Integer idCompaniaSeguros = resultSet.getInt("ID_COMPANIA_SEGUROS");
                 poliza.setCompaniaSeguros(cargarCompaniaSeguros(idCompaniaSeguros));
@@ -230,13 +255,14 @@ public class RepositorioPolizas {
             MiembroPersonal miembroPersonal = new MiembroPersonal();
             if(resultSet.next()){
                 miembroPersonal.setId(resultSet.getInt("ID"));
-                miembroPersonal.setCedula(resultSet.getInt("CEDULA"));
+                miembroPersonal.setCedula(resultSet.getLong("CEDULA"));
                 miembroPersonal.setNombre(resultSet.getString("NOMBRE"));
                 Integer idTipoSexo = resultSet.getInt("ID_TIPO_SEXO");
                 miembroPersonal.setSexo(sexo(idTipoSexo));
                 miembroPersonal.setDireccion(resultSet.getString("DIRECCION"));
                 Integer idTipoCargo = resultSet.getInt("ID_TIPO_CARGO");
                 miembroPersonal.setCargo(cargo(idTipoCargo));
+                miembroPersonal.setContrasenia(resultSet.getString("CONTRASENIA"));
                 //No es necesario cargar la lista de citas
             }
             return miembroPersonal;
@@ -247,7 +273,9 @@ public class RepositorioPolizas {
     }
 
     public void cargarCitas(Paciente paciente){
-        if(paciente.getCitas() != null){
+        if(paciente.getCitas() == null) {
+            paciente.setCitas(new ArrayList<>());
+        } else {
             paciente.getCitas().clear();
         }
         String traerCitas = "SELECT * FROM CITA WHERE ID_PACIENTE = ?";
@@ -273,7 +301,9 @@ public class RepositorioPolizas {
     }
 
     public void cargarPacientes(SistemaPolizas sistemaPolizas){
-        if(sistemaPolizas.getPacientes()!=null){
+        if (sistemaPolizas.getPacientes() == null) {
+            sistemaPolizas.setPacientes(new ArrayList<>());
+        } else {
             sistemaPolizas.getPacientes().clear();
         }
         String traerPacientes = "SELECT * FROM PACIENTE";
@@ -284,11 +314,11 @@ public class RepositorioPolizas {
             while(resultSet.next()){
                 Paciente paciente = new Paciente();
                 paciente.setId(resultSet.getInt("ID"));
-                paciente.setCedula(resultSet.getInt("CEDULA"));
+                paciente.setCedula(resultSet.getLong("CEDULA"));
                 paciente.setNombre(resultSet.getString("NOMBRE"));
                 Integer idTipoSexo = resultSet.getInt("ID_TIPO_SEXO");
                 paciente.setSexo(sexo(idTipoSexo));
-                paciente.setFechaNacimiento(resultSet.getDate("FECHANACIMIENTO"));
+                paciente.setFechaNacimiento(resultSet.getDate("FECHA_NACIMIENTO"));
                 paciente.setDireccion(resultSet.getString("DIRECCION"));
                 cargarCitas(paciente);
                 cargarPolizas(paciente);
@@ -302,7 +332,9 @@ public class RepositorioPolizas {
     //-------------------------------------------------------------------------------------------
 
     public void cargarCitas(SistemaPolizas sistemaPolizas){
-        if(sistemaPolizas.getCitas()!=null){
+        if (sistemaPolizas.getCitas() == null) {
+            sistemaPolizas.setCitas(new ArrayList<>());
+        } else {
             sistemaPolizas.getCitas().clear();
         }
         String traerCitas = "SELECT * FROM CITA";
@@ -354,7 +386,9 @@ public class RepositorioPolizas {
     }
 
     public void cargarReclamaciones(Poliza poliza){
-        if(poliza.getReclamaciones() != null){
+        if (poliza.getReclamaciones() == null) {
+            poliza.setReclamaciones(new ArrayList<>());
+        } else {
             poliza.getReclamaciones().clear();
         }
         String traerReclamaciones = "SELECT * FROM RECLAMACION WHERE ID_POLIZA = ?";
@@ -387,7 +421,9 @@ public class RepositorioPolizas {
     }
 
     public void cargarPolizas(SistemaPolizas sistemaPolizas){
-        if(sistemaPolizas.getPolizas() != null){
+        if (sistemaPolizas.getPolizas() == null) {
+            sistemaPolizas.setPolizas(new ArrayList<>());
+        } else {
             sistemaPolizas.getPolizas().clear();
         }
         String traerPolizas = "SELECT * FROM POLIZA";
@@ -398,7 +434,7 @@ public class RepositorioPolizas {
             while(resultSet.next()){
                 Poliza poliza = new Poliza();
                 poliza.setId(resultSet.getInt("ID"));
-                poliza.setNumero(resultSet.getInt("NUMERO"));
+                poliza.setNumero(resultSet.getLong("NUMERO"));
                 Integer idPaciente = resultSet.getInt("ID_PACIENTE");
                 poliza.setPaciente(cargarPaciente(idPaciente));
                 Integer idCompaniaSeguros = resultSet.getInt("ID_COMPANIA_SEGUROS");
@@ -416,13 +452,15 @@ public class RepositorioPolizas {
     //-------------------------------------------------------------------------------------------
 
     public void cargarReclamaciones(SistemaPolizas sistemaPolizas){
-        if(sistemaPolizas.getReclamaciones() != null){
+        if (sistemaPolizas.getReclamaciones() == null){
+            sistemaPolizas.setReclamaciones(new ArrayList<>());
+        } else {
             sistemaPolizas.getReclamaciones().clear();
         }
-        String traerPolizas = "SELECT * FROM POLIZA";
+        String traerReclamaciones = "SELECT * FROM RECLAMACION";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(traerPolizas);
+            PreparedStatement preparedStatement = connection.prepareStatement(traerReclamaciones);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
                 Reclamacion reclamacion = new Reclamacion();

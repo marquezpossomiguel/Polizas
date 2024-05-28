@@ -6,7 +6,7 @@ import java.util.List;
 public class Paciente {
     //Atributos de instancia
     private Integer id;
-    private Integer cedula;
+    private Long cedula;
     private String nombre;
     private String sexo;
     private java.sql.Date fechaNacimiento;
@@ -18,7 +18,7 @@ public class Paciente {
     public Paciente() {
     }
 
-    public Paciente(Integer id, Integer cedula, String nombre, String sexo, Date fechaNacimiento, String direccion, List<Cita> citas, List<Poliza> polizas) {
+    public Paciente(Integer id, Long cedula, String nombre, String sexo, Date fechaNacimiento, String direccion, List<Cita> citas, List<Poliza> polizas) {
         this.id = id;
         this.cedula = cedula;
         this.nombre = nombre;
@@ -38,11 +38,11 @@ public class Paciente {
         this.id = id;
     }
 
-    public Integer getCedula() {
+    public Long getCedula() {
         return cedula;
     }
 
-    public void setCedula(Integer cedula) {
+    public void setCedula(Long cedula) {
         this.cedula = cedula;
     }
 

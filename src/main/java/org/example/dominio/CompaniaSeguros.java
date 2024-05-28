@@ -5,7 +5,7 @@ import java.util.List;
 public class CompaniaSeguros {
     //Atributos de instancia
     private Integer id;
-    private Integer nit;
+    private Long nit;
     private String nombre;
     private String direccion;
     private String direccionIp;
@@ -15,7 +15,7 @@ public class CompaniaSeguros {
     public CompaniaSeguros() {
     }
 
-    public CompaniaSeguros(Integer id, Integer nit, String nombre, String direccion, String direccionIp, List<Poliza> polizas) {
+    public CompaniaSeguros(Integer id, Long nit, String nombre, String direccion, String direccionIp, List<Poliza> polizas) {
         this.id = id;
         this.nit = nit;
         this.nombre = nombre;
@@ -33,11 +33,11 @@ public class CompaniaSeguros {
         this.id = id;
     }
 
-    public Integer getNit() {
+    public Long getNit() {
         return nit;
     }
 
-    public void setNit(Integer nit) {
+    public void setNit(Long nit) {
         this.nit = nit;
     }
 
