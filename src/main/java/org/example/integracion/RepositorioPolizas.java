@@ -489,7 +489,7 @@ public class RepositorioPolizas {
     //-------------------------------------------------------------------------------------------
 
     public void insertarCita(Cita cita){
-        String insertarCita = "INSERT INTO CITA VALUES (ID_PACIENTE, ID_MIEMBRO_PERSONAL, FECHA_HORA_PROGRAMADA) VALUES (?, ?, ?)";
+        String insertarCita = "INSERT INTO CITA (ID_PACIENTE, ID_MIEMBRO_PERSONAL, FECHA_HORA_PROGRAMADA) VALUES (?, ?, ?)";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
             connection.setAutoCommit(false);
