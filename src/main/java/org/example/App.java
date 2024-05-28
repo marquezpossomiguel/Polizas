@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class App {
     public static void main( String[] args ) {
+        //Objetos y varibales para manejar la correcta entrada de datos
         Scanner scanner = new Scanner(System.in);
         SistemaPolizas sistemaPolizas = new SistemaPolizas();
         sistemaPolizas.setNombre("PUJ");
@@ -22,6 +23,7 @@ public class App {
         MiembroPersonal usuarioLogIn = null;
         actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
 
+        //Validar inicio de sesión
         do {
             datoCorrecto = false;
             usuarioEncontrado = false;
@@ -47,6 +49,7 @@ public class App {
             }
         } while (usuarioEncontrado == false);
 
+        //Menú del sistema de polizas
         do {
             opcionCorrecta = false;
             System.out.println("------------------------------------------------");
@@ -86,6 +89,7 @@ public class App {
         } while (true);
     }
 
+    //Actuliza el repositorio de polizas para que el usuario intertue con los datos actualizados
     public static void actulizarRepositorioPolizas(SistemaPolizas sistemaPolizas, RepositorioPolizas repositorioPolizas){
         repositorioPolizas.cargarMiembrosPersonal(sistemaPolizas);
         repositorioPolizas.cargarPacientes(sistemaPolizas);
@@ -94,6 +98,7 @@ public class App {
         repositorioPolizas.cargarReclamaciones(sistemaPolizas);
     }
 
+    //Opción A, 1
     public static void iniciarRegistroCita(SistemaPolizas sistemaPolizas, RepositorioPolizas repositorioPolizas, MiembroPersonal miembroPersonal, Scanner scanner){
         Integer idPaciente;
         java.sql.Date fechaActual = new java.sql.Date(new Date().getTime());
@@ -109,30 +114,37 @@ public class App {
         repositorioPolizas.insertarCita(cita);
     }
 
+    //Opción A, 2
     public static void agregarReclamoCita(){
 
     }
 
+    //Opción A, 3
     public static void listarReclamosCita(){
 
     }
 
+    //Opción A, 4
     public static void eliminarReclamoCita(){
 
     }
 
+    //Opción A, 5
     public static void modificarMontoReclamadoReclamoCita(){
 
     }
 
+    //Opción A, 6
     public static void totalizarCita(){
 
     }
 
+    //Opción A, 7
     public static void consultarCitasAlmacenadas(){
 
     }
 
+    //Menú, Opción A
     public static void opcionA(SistemaPolizas sistemaPolizas, RepositorioPolizas repositorioPolizas, MiembroPersonal miembroPersonal, Scanner scanner) {
         boolean opcionCorrecta;
         int opcionMenu = -1;
@@ -209,6 +221,7 @@ public class App {
         } while (true);
     }
 
+    //Opción B
     public static void actualizarMontoPagado(){
 
     }
