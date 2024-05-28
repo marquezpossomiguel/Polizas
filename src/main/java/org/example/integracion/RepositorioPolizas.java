@@ -489,14 +489,14 @@ public class RepositorioPolizas {
     //-------------------------------------------------------------------------------------------
 
     public void insertarCita(Cita cita){
-        String insertarCita = "INSERT INTO VALUES (ID_PACIENTE, ID_MIEMBRO_PERSONAL, FECHA_REGISTRO) VALUES (?, ?, ?)";
+        String insertarCita = "INSERT INTO CITA VALUES (ID_PACIENTE, ID_MIEMBRO_PERSONAL, FECHA_HORA_PROGRAMADA) VALUES (?, ?, ?)";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement(insertarCita);
             preparedStatement.setInt(1, cita.getPaciente().getId());
             preparedStatement.setInt(2, cita.getMiembroPersonal().getId());
-            preparedStatement.setDate(3, cita.getFechaRegistro());
+            preparedStatement.setDate(3, cita.getFechaProgramada());
             int filasAfectadas = preparedStatement.executeUpdate();
             if (filasAfectadas < 1) {
                 System.out.println("No se pudo agregar la cita " + cita.getId() + " a la base de datos");

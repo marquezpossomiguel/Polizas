@@ -29,16 +29,17 @@ public class App {
             usuarioEncontrado = false;
             while (datoCorrecto == false) {
                 try {
+                    System.out.println("------------------------------------------------");
+                    System.out.println("LogIn");
+                    System.out.println("------------------------------------------------");
                     System.out.println("Digite el nombre de usuario: ");
                     usuarioCuenta = scanner.nextLine();
                     System.out.println("Digite la contrasenia: ");
-                    scanner.nextLine();
                     contraseniaCuenta = scanner.next();
-                    scanner.nextLine();
                     datoCorrecto = true;
+                    scanner.nextLine();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    scanner.nextLine();
                 }
             }
             for (MiembroPersonal miembroPersonal : sistemaPolizas.getMiembrosPersonal()) {
@@ -58,6 +59,7 @@ public class App {
             System.out.println("Digite la opcion que quiere ejecutar: ");
             System.out.println("\t(1) Iniciar registro cita");
             System.out.println("\t(2) Actualizar monto pagado");
+            System.out.println("\t(3) Salir");
             while (opcionCorrecta == false) {
                 try {
                     System.out.print("Respuesta: ");
@@ -80,6 +82,10 @@ public class App {
                     actualizarMontoPagado();
                     System.out.println();
                     break;
+                case 3:
+                    System.out.println("-----------------");
+                    System.out.println("Gracias, vuelva pronto");
+                    return;
                 default:
                     System.out.println("-----------------");
                     System.out.println("El numero ingresado no corresponde a ninguna de las opciones permitidas");
@@ -107,7 +113,6 @@ public class App {
         sistemaPolizas.mostrarPacientes();
         System.out.println("Digite el id del paciente: ");
         idPaciente = scanner.nextInt();
-        scanner.nextLine();
         cita.setPaciente(sistemaPolizas.buscarPaciente(idPaciente));
         cita.setMiembroPersonal(miembroPersonal);
         cita.setFechaProgramada(fechaActual);
@@ -158,6 +163,7 @@ public class App {
             System.out.println("\t(5) Modificar monto reclamado del reclamo en una cita");
             System.out.println("\t(6) Totalizar cita");
             System.out.println("\t(7) Consultar citas almacenadas");
+            System.out.println("\t(8) Salir");
             while (opcionCorrecta == false) {
                 try {
                     System.out.print("Respuesta: ");
@@ -212,6 +218,11 @@ public class App {
                     actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
                     System.out.println();
                     break;
+                case 8:
+                    System.out.println("-----------------");
+                    actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
+                    System.out.println();
+                    return;
                 default:
                     System.out.println("-----------------");
                     System.out.println("El numero ingresado no corresponde a ninguna de las opciones permitidas");
