@@ -31,6 +31,8 @@ public class RepositorioPolizas {
         return tipoCobertura[idCobertura-1];
     }
 
+    //-------------------------------------------------------------------------------------------
+
     public Paciente cargarPaciente(Integer idPaciente){
         String traerPaciente = "SELECT * FROM PACIENTE WHERE ID = ?";
         try{
@@ -45,8 +47,9 @@ public class RepositorioPolizas {
                 paciente.setNombre(resultSet.getString("NOMBRE"));
                 Integer idTipoSexo = resultSet.getInt("ID_TIPO_SEXO");
                 paciente.setSexo(sexo(idTipoSexo));
-                paciente.setFechaNacimiento(resultSet.getDate("FECHANACIMIENTO"));
+                paciente.setFechaNacimiento(resultSet.getDate("FECHA_NACIMIENTO"));
                 paciente.setDireccion(resultSet.getString("DIRECCION"));
+                //No es necesario cargar la lista de citas y de polizas
             }
             return paciente;
         }catch (Exception e){
@@ -55,7 +58,86 @@ public class RepositorioPolizas {
         return null;
     }
 
+    public CompaniaSeguros cargarCompaniaSeguros(Integer idCompaniaSeguros){
+        String traerCompaniaSeguros = "SELECT * FROM COMPANIA_SEGUROS WHERE ID = ?";
+        try{
+            Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
+            PreparedStatement preparedStatement = connection.prepareStatement(traerCompaniaSeguros);
+            preparedStatement.setInt(1, idCompaniaSeguros);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            CompaniaSeguros companiaSeguros = new CompaniaSeguros();
+            if(resultSet.next()){
+                companiaSeguros.setId(resultSet.getInt("ID"));
+                companiaSeguros.setNit(resultSet.getInt("NIT"));
+                companiaSeguros.setNombre(resultSet.getString("NOMBRE"));
+                companiaSeguros.setDireccion(resultSet.getString("DIRECCION"));
+                companiaSeguros.setDireccionIp(resultSet.getString("DIRECCION_IP"));
+            }
+            return companiaSeguros;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Poliza cargarPoliza(Integer idPoliza){
+        String traerPoliza = "SELECT * FROM POLIZA WHERE ID = ?";
+        try{
+            Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
+            PreparedStatement preparedStatement = connection.prepareStatement(traerPoliza);
+            preparedStatement.setInt(1, idPoliza);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Poliza poliza = new Poliza();
+            if(resultSet.next()){
+                poliza.setId(resultSet.getInt("ID"));
+                poliza.setNumero(resultSet.getInt("NUMERO"));
+                Integer idPaciente = resultSet.getInt("ID_PACIENTE");
+                poliza.setPaciente(cargarPaciente(idPaciente));
+                Integer idCompaniaSeguros = resultSet.getInt("ID_COMPANIA_SEGUROS");
+                cargarCompaniaSeguros(idCompaniaSeguros);
+                Integer idCobertura = resultSet.getInt("ID_TIPO_COBERTURA");
+                poliza.setCobertura(cobertura(idCobertura));
+            }
+            return poliza;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void cargarReclamaciones(Cita cita){
+        cita.getReclamaciones().clear();
+        String traerReclamaciones = "SELECT * FROM RECLAMACION WHERE ID_CITA = ?";
+        try{
+            Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
+            PreparedStatement preparedStatement = connection.prepareStatement(traerReclamaciones);
+            preparedStatement.setInt(1, cita.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                Reclamacion reclamacion = new Reclamacion();
+                reclamacion.setId(resultSet.getInt("ID"));
+                reclamacion.setAccion(resultSet.getString("ACCION"));
+                reclamacion.setFechaIncidente(resultSet.getDate("FECHA_INCIDENTE"));
+                reclamacion.setFechaRegistro(resultSet.getDate("FECHA_REGISTRO"));
+                reclamacion.setMontoDemandado(resultSet.getInt("MONTO_DEMANDADO"));
+                reclamacion.setMontoPagado(resultSet.getInt("MONTO_PAGADO"));
+                reclamacion.setFechaPago(resultSet.getDate("FECHA_PAGO"));
+                Integer idCodigoReclamacion = resultSet.getInt("ID_CODIGO_RECLAMACION");
+                reclamacion.setCodigoReclamacion(reclamacion(idCodigoReclamacion));
+                Integer idCodigoNoPago = resultSet.getInt("ID_CODIGO_NO_PAGO");
+                reclamacion.setCodigoNoPago(noPago(idCodigoNoPago));
+                reclamacion.setCita(cita);
+                Integer idPoliza = resultSet.getInt("ID_POLIZA");
+                reclamacion.setPoliza(cargarPoliza(idPoliza));
+                cita.getReclamaciones().add(reclamacion);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public void cargarCitas(MiembroPersonal miembroPersonal){
+        miembroPersonal.getCitas().clear();
         String traerCitas = "SELECT * FROM CITA WHERE ID_MIEMBRO_PERSONAL = ?";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
@@ -69,6 +151,8 @@ public class RepositorioPolizas {
                 cita.setPaciente(cargarPaciente(idPaciente));
                 cita.setMiembroPersonal(miembroPersonal);
                 cita.setFechaProgramada(resultSet.getDate("FECHA_HORA_PROGRAMADA"));
+                cita.setFechaRegistro(resultSet.getDate("FECHA_HORA_REGISTRO"));
+                cargarReclamaciones(cita);
                 miembroPersonal.getCitas().add(cita);
             }
         }catch (Exception e){
@@ -101,6 +185,33 @@ public class RepositorioPolizas {
         }
     }
 
+    //-------------------------------------------------------------------------------------------
+
+    public void cargarPolizas(Paciente paciente){
+       paciente.getPolizas().clear();
+        String traerPolizas = "SELECT * FROM POLIZA WHERE ID_PACIENTE = ?";
+        try{
+            Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
+            PreparedStatement preparedStatement = connection.prepareStatement(traerPolizas);
+            preparedStatement.setInt(1, paciente.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                Poliza poliza = new Poliza();
+                poliza.setId(resultSet.getInt("ID"));
+                poliza.setNumero(resultSet.getInt("NUMERO"));
+                poliza.setPaciente(paciente);
+                Integer idCompaniaSeguros = resultSet.getInt("ID_COMPANIA_SEGUROS");
+                poliza.setCompaniaSeguros(cargarCompaniaSeguros(idCompaniaSeguros));
+                Integer idCobertura = resultSet.getInt("ID_TIPO_COBERTURA");
+                poliza.setCobertura(cobertura(idCobertura));
+                cargarReclamaciones(poliza);
+                paciente.getPolizas().add(poliza);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public MiembroPersonal cargarMiembroPersonal(Integer idMiembroPersonal){
         String traerMiembroPersonal = "SELECT * FROM MIEMBRO_PERSONAL WHERE ID = ?";
         try{
@@ -118,6 +229,7 @@ public class RepositorioPolizas {
                 miembroPersonal.setDireccion(resultSet.getString("DIRECCION"));
                 Integer idTipoCargo = resultSet.getInt("ID_TIPO_CARGO");
                 miembroPersonal.setCargo(cargo(idTipoCargo));
+                //No es necesario cargar la lista de citas
             }
             return miembroPersonal;
         }catch (Exception e){
@@ -127,7 +239,8 @@ public class RepositorioPolizas {
     }
 
     public void cargarCitas(Paciente paciente){
-        String traerCitas = "SELECT * FROM CITA WHERE ID_MIEMBRO_PERSONAL = ?";
+        paciente.getCitas().clear();
+        String traerCitas = "SELECT * FROM CITA WHERE ID_PACIENTE = ?";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
             PreparedStatement preparedStatement = connection.prepareStatement(traerCitas);
@@ -140,6 +253,8 @@ public class RepositorioPolizas {
                 Integer idMiembroPersonal = resultSet.getInt("ID_MIEMBRO_PERSONAL");
                 cita.setMiembroPersonal(cargarMiembroPersonal(idMiembroPersonal));
                 cita.setFechaProgramada(resultSet.getDate("FECHA_HORA_PROGRAMADA"));
+                cita.setFechaRegistro(resultSet.getDate("FECHA_HORA_REGISTRO"));
+                cargarReclamaciones(cita);
                 paciente.getCitas().add(cita);
             }
         }catch (Exception e){
@@ -164,6 +279,7 @@ public class RepositorioPolizas {
                 paciente.setFechaNacimiento(resultSet.getDate("FECHANACIMIENTO"));
                 paciente.setDireccion(resultSet.getString("DIRECCION"));
                 cargarCitas(paciente);
+                cargarPolizas(paciente);
                 sistemaPolizas.getPacientes().add(paciente);
             }
         }catch (Exception e){
@@ -171,54 +287,7 @@ public class RepositorioPolizas {
         }
     }
 
-    //------------------------------------------------------------------
-
-    public Poliza cargarPoliza(Integer idPoliza){
-        String traerPolizas = "SELECT * FROM POLIZA WHERE ID = ?";
-        try{
-            Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(traerPolizas);
-            preparedStatement.setInt(1, idPoliza);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            Poliza poliza = new Poliza();
-            if(resultSet.next()){
-
-            }
-            return poliza;
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void cargarReclamacion(Cita cita){
-        String traerReclamaciones = "SELECT * FROM RECLAMACION WHERE ID = ?";
-        try{
-            Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(traerReclamaciones);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
-                Reclamacion reclamacion = new Reclamacion();
-                reclamacion.setId(resultSet.getInt("ID"));
-                reclamacion.setAccion(resultSet.getString("ACCION"));
-                reclamacion.setFechaIncidente(resultSet.getDate("FECHA_INCIDENTE"));
-                reclamacion.setFechaRegistro(resultSet.getDate("FECHA_REGISTRO"));
-                reclamacion.setMontoDemandado(resultSet.getInt("MONTO_DEMANDADO"));
-                reclamacion.setMontoPagado(resultSet.getInt("MONTO_PAGADO"));
-                reclamacion.setFechaPago(resultSet.getDate("FECHA_PAGO"));
-                Integer idCodigoReclamacion = resultSet.getInt("ID_CODIGO_RECLAMACION");
-                reclamacion.setCodigoReclamacion(reclamacion(idCodigoReclamacion));
-                Integer idCodigoNoPago = resultSet.getInt("ID_CODIGO_NO_PAGO");
-                reclamacion.setCodigoNoPago(noPago(idCodigoNoPago));
-                reclamacion.setCita(cita);
-                Integer idPoliza = resultSet.getInt("ID_POLIZA");
-                reclamacion.setPoliza(cargarPoliza(idPoliza));
-
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+    //-------------------------------------------------------------------------------------------
 
     public void cargarCitas(SistemaPolizas sistemaPolizas){
         sistemaPolizas.getCitas().clear();
@@ -235,6 +304,8 @@ public class RepositorioPolizas {
                 Integer idMiembroPersonal = resultSet.getInt("ID_MIEMBRO_PERSONAL");
                 cita.setMiembroPersonal(cargarMiembroPersonal(idMiembroPersonal));
                 cita.setFechaProgramada(resultSet.getDate("FECHA_HORA_PROGRAMADA"));
+                cita.setFechaRegistro(resultSet.getDate("FECHA_HORA_REGISTRO"));
+                cargarReclamaciones(cita);
                 sistemaPolizas.getCitas().add(cita);
             }
         }catch (Exception e){
@@ -242,7 +313,91 @@ public class RepositorioPolizas {
         }
     }
 
-    public void cargarReclamaciones(Cita cita){
+    //-------------------------------------------------------------------------------------------
+
+    public Cita cargarCita(Integer idCita){
+        String traerCita = "SELECT * FROM CITA WHERE ID = ?";
+        try{
+            Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
+            PreparedStatement preparedStatement = connection.prepareStatement(traerCita);
+            preparedStatement.setInt(1, idCita);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Cita cita = new Cita();
+            if(resultSet.next()){
+                cita.setId(resultSet.getInt("ID"));
+                Integer idPaciente = resultSet.getInt("ID_PACIENTE");
+                cita.setPaciente(cargarPaciente(idPaciente));
+                Integer idMiembroPersonal = resultSet.getInt("ID_MIEMBRO_PERSONAL");
+                cita.setMiembroPersonal(cargarMiembroPersonal(idMiembroPersonal));
+                cita.setFechaProgramada(resultSet.getDate("FECHA_HORA_PROGRAMADA"));
+                cita.setFechaRegistro(resultSet.getDate("FECHA_HORA_REGISTRO"));
+            }
+            return cita;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void cargarReclamaciones(Poliza poliza){
+        poliza.getReclamaciones().clear();
+        String traerReclamaciones = "SELECT * FROM RECLAMACION WHERE ID_POLIZA = ?";
+        try{
+            Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
+            PreparedStatement preparedStatement = connection.prepareStatement(traerReclamaciones);
+            preparedStatement.setInt(1, poliza.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                Reclamacion reclamacion = new Reclamacion();
+                reclamacion.setId(resultSet.getInt("ID"));
+                reclamacion.setAccion(resultSet.getString("ACCION"));
+                reclamacion.setFechaIncidente(resultSet.getDate("FECHA_INCIDENTE"));
+                reclamacion.setFechaRegistro(resultSet.getDate("FECHA_REGISTRO"));
+                reclamacion.setMontoDemandado(resultSet.getInt("MONTO_DEMANDADO"));
+                reclamacion.setMontoPagado(resultSet.getInt("MONTO_PAGADO"));
+                reclamacion.setFechaPago(resultSet.getDate("FECHA_PAGO"));
+                Integer idReclamacion = resultSet.getInt("ID_CODIGO_RECLAMACION");
+                reclamacion.setCodigoReclamacion(reclamacion(idReclamacion));
+                Integer idNoPago = resultSet.getInt("ID_CODIGO_NO_PAGO");
+                reclamacion.setCodigoNoPago(noPago(idNoPago));
+                Integer idCita = resultSet.getInt("ID_CITA");
+                reclamacion.setCita(cargarCita(idCita));
+                reclamacion.setPoliza(poliza);
+                poliza.getReclamaciones().add(reclamacion);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void cargarPolizas(SistemaPolizas sistemaPolizas){
+        sistemaPolizas.getPolizas().clear();
+        String traerPolizas = "SELECT * FROM POLIZA";
+        try{
+            Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
+            PreparedStatement preparedStatement = connection.prepareStatement(traerPolizas);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                Poliza poliza = new Poliza();
+                poliza.setId(resultSet.getInt("ID"));
+                poliza.setNumero(resultSet.getInt("NUMERO"));
+                Integer idPaciente = resultSet.getInt("ID_PACIENTE");
+                poliza.setPaciente(cargarPaciente(idPaciente));
+                Integer idCompaniaSeguros = resultSet.getInt("ID_COMPANIA_SEGUROS");
+                cargarCompaniaSeguros(idCompaniaSeguros);
+                Integer idCobertura = resultSet.getInt("ID_TIPO_COBERTURA");
+                poliza.setCobertura(cobertura(idCobertura));
+                cargarReclamaciones(poliza);
+                sistemaPolizas.getPolizas().add(poliza);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //-------------------------------------------------------------------------------------------
+
+    /*public void cargarReclamaciones(Cita cita){
         String traerReclamaciones = "SELECT * FROM RECLAMACION WHERE ID_CITA = ?";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
@@ -335,4 +490,5 @@ public class RepositorioPolizas {
             e.printStackTrace();
         }
     }
+     */
 }

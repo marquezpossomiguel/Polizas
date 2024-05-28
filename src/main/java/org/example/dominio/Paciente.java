@@ -12,12 +12,13 @@ public class Paciente {
     private java.sql.Date fechaNacimiento;
     private String direccion;
     private List<Cita> citas;
+    private List<Poliza> polizas;
 
     //Métodos constructores
     public Paciente() {
     }
 
-    public Paciente(Integer id, Integer cedula, String nombre, String sexo, Date fechaNacimiento, String direccion, List<Cita> citas) {
+    public Paciente(Integer id, Integer cedula, String nombre, String sexo, Date fechaNacimiento, String direccion, List<Cita> citas, List<Poliza> polizas) {
         this.id = id;
         this.cedula = cedula;
         this.nombre = nombre;
@@ -25,6 +26,7 @@ public class Paciente {
         this.fechaNacimiento = fechaNacimiento;
         this.direccion = direccion;
         this.citas = citas;
+        this.polizas = polizas;
     }
 
     //Métodos de acceso
@@ -82,5 +84,13 @@ public class Paciente {
 
     public void setCitas(List<Cita> citas) {
         this.citas = citas;
+    }
+
+    public List<Poliza> getPolizas() {
+        return polizas;
+    }
+
+    public void setPolizas(List<Poliza> polizas) {
+        this.polizas = polizas;
     }
 }

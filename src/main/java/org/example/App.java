@@ -23,8 +23,8 @@ public class App {
         repositorioPolizas.cargarMiembrosPersonal(sistemaPolizas);
         repositorioPolizas.cargarPacientes(sistemaPolizas);
         repositorioPolizas.cargarCitas(sistemaPolizas);
-        repositorioPolizas.cargarReclamaciones(sistemaPolizas);
         repositorioPolizas.cargarPolizas(sistemaPolizas);
+        //repositorioPolizas.cargarReclamaciones(sistemaPolizas);
 
         do {
             datoCorrecto = false;
@@ -102,7 +102,7 @@ public class App {
         cita.setPaciente(sistemaPolizas.buscarPaciente(idPaciente));
         cita.setMiembroPersonal(miembroPersonal);
         cita.setFechaProgramada(fechaActual);
-        repositorioPolizas.insertarCita(cita);
+        //repositorioPolizas.insertarCita(cita);
     }
 
     public static void agregarReclamoCita(){
