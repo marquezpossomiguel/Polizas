@@ -106,7 +106,9 @@ public class RepositorioPolizas {
     }
 
     public void cargarReclamaciones(Cita cita){
-        cita.getReclamaciones().clear();
+        if(cita.getReclamaciones() != null){
+            cita.getReclamaciones().clear();
+        }
         String traerReclamaciones = "SELECT * FROM RECLAMACION WHERE ID_CITA = ?";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
@@ -137,7 +139,9 @@ public class RepositorioPolizas {
     }
 
     public void cargarCitas(MiembroPersonal miembroPersonal){
-        miembroPersonal.getCitas().clear();
+        if(miembroPersonal.getCitas() != null){
+            miembroPersonal.getCitas().clear();
+        }
         String traerCitas = "SELECT * FROM CITA WHERE ID_MIEMBRO_PERSONAL = ?";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
@@ -161,7 +165,9 @@ public class RepositorioPolizas {
     }
 
     public void cargarMiembrosPersonal(SistemaPolizas sistemaPolizas){
-        sistemaPolizas.getMiembrosPersonal().clear();
+        if(sistemaPolizas.getMiembrosPersonal()!=null){
+            sistemaPolizas.getMiembrosPersonal().clear();
+        }
         String traerMiembrosPersonal = "SELECT * FROM MIEMBRO_PERSONAL";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
@@ -188,7 +194,9 @@ public class RepositorioPolizas {
     //-------------------------------------------------------------------------------------------
 
     public void cargarPolizas(Paciente paciente){
-       paciente.getPolizas().clear();
+        if(paciente.getPolizas() != null){
+            paciente.getPolizas().clear();
+        }
         String traerPolizas = "SELECT * FROM POLIZA WHERE ID_PACIENTE = ?";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
@@ -239,7 +247,9 @@ public class RepositorioPolizas {
     }
 
     public void cargarCitas(Paciente paciente){
-        paciente.getCitas().clear();
+        if(paciente.getCitas() != null){
+            paciente.getCitas().clear();
+        }
         String traerCitas = "SELECT * FROM CITA WHERE ID_PACIENTE = ?";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
@@ -263,7 +273,9 @@ public class RepositorioPolizas {
     }
 
     public void cargarPacientes(SistemaPolizas sistemaPolizas){
-        sistemaPolizas.getPacientes().clear();
+        if(sistemaPolizas.getPacientes()!=null){
+            sistemaPolizas.getPacientes().clear();
+        }
         String traerPacientes = "SELECT * FROM PACIENTE";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
@@ -290,7 +302,9 @@ public class RepositorioPolizas {
     //-------------------------------------------------------------------------------------------
 
     public void cargarCitas(SistemaPolizas sistemaPolizas){
-        sistemaPolizas.getCitas().clear();
+        if(sistemaPolizas.getCitas()!=null){
+            sistemaPolizas.getCitas().clear();
+        }
         String traerCitas = "SELECT * FROM CITA";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
@@ -340,7 +354,9 @@ public class RepositorioPolizas {
     }
 
     public void cargarReclamaciones(Poliza poliza){
-        poliza.getReclamaciones().clear();
+        if(poliza.getReclamaciones() != null){
+            poliza.getReclamaciones().clear();
+        }
         String traerReclamaciones = "SELECT * FROM RECLAMACION WHERE ID_POLIZA = ?";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
@@ -371,7 +387,9 @@ public class RepositorioPolizas {
     }
 
     public void cargarPolizas(SistemaPolizas sistemaPolizas){
-        sistemaPolizas.getPolizas().clear();
+        if(sistemaPolizas.getPolizas() != null){
+            sistemaPolizas.getPolizas().clear();
+        }
         String traerPolizas = "SELECT * FROM POLIZA";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
@@ -398,7 +416,9 @@ public class RepositorioPolizas {
     //-------------------------------------------------------------------------------------------
 
     public void cargarReclamaciones(SistemaPolizas sistemaPolizas){
-        sistemaPolizas.getReclamaciones().clear();
+        if(sistemaPolizas.getReclamaciones() != null){
+            sistemaPolizas.getReclamaciones().clear();
+        }
         String traerPolizas = "SELECT * FROM POLIZA";
         try{
             Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
