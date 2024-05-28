@@ -64,8 +64,8 @@ public class App {
                 try {
                     System.out.print("Respuesta: ");
                     opcionMenu = scanner.nextInt();
-                    scanner.nextLine();
                     opcionCorrecta = true;
+                    scanner.nextLine();
                 } catch (Exception e) {
                     e.printStackTrace();
                     scanner.nextLine();
@@ -168,8 +168,8 @@ public class App {
                 try {
                     System.out.print("Respuesta: ");
                     opcionMenu = scanner.nextInt();
-                    scanner.nextLine();
                     opcionCorrecta = true;
+                    scanner.nextLine();
                 } catch (Exception e) {
                     e.printStackTrace();
                     scanner.nextLine();
