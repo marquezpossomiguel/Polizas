@@ -507,4 +507,137 @@ public class RepositorioPolizas {
             e.printStackTrace();
         }
     }
+
+    public void consultarCitasAlmacenadas(MiembroPersonal usuario, int year, int month) {
+        String comprobarCitasUsuario = "SELECT COUNT(*) AS total FROM CITA WHERE ID_MIEMBRO_PERSONAL = ?";
+        String consultarCitas = "SELECT c.ID, c.FECHA_HORA_PROGRAMADA, p.NOMBRE AS PACIENTE_NOMBRE, mp.NOMBRE AS MIEMBRO_PERSONAL_NOMBRE " +
+                "FROM CITA c " +
+                "JOIN PACIENTE p ON c.ID_PACIENTE = p.ID " +
+                "JOIN MIEMBRO_PERSONAL mp ON c.ID_MIEMBRO_PERSONAL = mp.ID " +
+                "WHERE c.ID_MIEMBRO_PERSONAL = ? " +
+                "AND EXTRACT(YEAR FROM c.FECHA_HORA_PROGRAMADA) = ? " +
+                "AND EXTRACT(MONTH FROM c.FECHA_HORA_PROGRAMADA) = ?";
+        boolean citasEncontradas = false;
+
+        try (Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
+             PreparedStatement comprobarStatement = connection.prepareStatement(comprobarCitasUsuario);
+             PreparedStatement consultarStatement = connection.prepareStatement(consultarCitas)) {
+
+            comprobarStatement.setInt(1, usuario.getId());
+            ResultSet comprobarResultSet = comprobarStatement.executeQuery();
+            if (comprobarResultSet.next() && comprobarResultSet.getInt("total") == 0) {
+                System.out.println("El usuario " + usuario.getNombre() + " no tiene citas asignadas.");
+                return;  // Salir del método si el usuario no tiene citas asignadas
+            }
+
+            consultarStatement.setInt(1, usuario.getId());
+            consultarStatement.setInt(2, year);
+            consultarStatement.setInt(3, month);
+            ResultSet resultSet = consultarStatement.executeQuery();
+
+            System.out.println("-------------------------------------------------");
+            System.out.println("                      CITAS                      ");
+            System.out.println("-------------------------------------------------");
+
+            while (resultSet.next()) {
+
+                citasEncontradas = true;
+
+                int id = resultSet.getInt("ID");
+                Date fechaHoraProgramada = resultSet.getDate("FECHA_HORA_PROGRAMADA");
+                //Date fechaHoraRegistro = resultSet.getDate("FECHA_HORA_REGISTRO");
+                String pacienteNombre = resultSet.getString("PACIENTE_NOMBRE");
+                String miembroPersonalNombre = resultSet.getString("MIEMBRO_PERSONAL_NOMBRE");
+
+                System.out.println("ID de la Cita: " + id);
+                System.out.println("Nombre del Paciente: " + pacienteNombre);
+                System.out.println("Nombre del Miembro Personal: " + miembroPersonalNombre);
+                System.out.println("Fecha Programada: " + fechaHoraProgramada);
+                //System.out.println("Fecha Registro: " + fechaHoraRegistro);
+                System.out.println("-------------------------------------------------");
+            }
+
+            if (!citasEncontradas) {
+                System.out.println("No se encontraron citas para el usuario " + usuario.getNombre() + " en la fecha especificada: " + month + "/" + year);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void listarReclamosCita(Cita cita) {
+        String listarReclamos = "SELECT * FROM RECLAMACION WHERE ID_CITA = ?";
+        try (Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
+             PreparedStatement listarStatement = connection.prepareStatement(listarReclamos)) {
+            listarStatement.setInt(1, cita.getId());
+            ResultSet rs = listarStatement.executeQuery();
+
+            while (rs.next()) {
+                double montoReclamado = rs.getDouble("MONTO_DEMANDADO");
+                double montoPagado = rs.getDouble("MONTO_PAGADO");
+                double diferencia = montoReclamado - montoPagado;
+
+                System.out.println("ID del Reclamo: " + rs.getInt("id"));
+                System.out.println("Monto Reclamado: " + montoReclamado);
+                System.out.println("Monto Pagado: " + montoPagado);
+                System.out.println("Diferencia: " + diferencia);
+                System.out.println("----------------------------");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void listarCitasConReclamosSinMontoPagado() {
+        String listarSinMonto = "SELECT c.ID, c.FECHA_HORA_PROGRAMADA, p.NOMBRE FROM CITA c " +
+                "JOIN PACIENTE p ON c.ID_PACIENTE = p.ID " +
+                "JOIN RECLAMACION r ON c.ID = r.ID_CITA " +
+                "WHERE r.MONTO_PAGADO IS NULL OR r.MONTO_PAGADO = 0";
+        try (Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
+             PreparedStatement pstmt = connection.prepareStatement(listarSinMonto);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                System.out.println("ID de la Cita: " + rs.getInt("ID"));
+                System.out.println("Fecha Cita Programada: " + rs.getDate("FECHA_HORA_PROGRAMADA"));
+                System.out.println("Nombre del Paciente: " + rs.getString("NOMBRE"));
+                System.out.println("----------------------------");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+
+    public void modificarMontoReclamado(int idReclamo, int nuevoMontoReclamado) {
+        String actualizarMonto = "UPDATE RECLAMACION SET MONTO_DEMANDADO = ? WHERE ID = ?";
+        try (Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(actualizarMonto)) {
+            preparedStatement.setFloat(1, nuevoMontoReclamado);
+            preparedStatement.setInt(2, idReclamo);
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("El monto reclamado ha sido actualizado exitosamente.");
+            } else {
+                System.out.println("No se encontró el reclamo con el ID proporcionado.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void actualizarMontoPagado(int reclamoId, double montoPagado) {
+        String actualizarMontoP = "UPDATE RECLAMACION SET MONTO_PAGADO = ? WHERE ID = ?";
+        try (Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(actualizarMontoP)) {
+            preparedStatement.setDouble(1, montoPagado);
+            preparedStatement.setInt(2, reclamoId);
+            preparedStatement.executeUpdate();
+            System.out.println("Monto pagado actualizado exitosamente.");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }

@@ -89,6 +89,20 @@ public class SistemaPolizas {
         }
     }
 
+    public void mostrarCitas() {
+        System.out.println("-----------------------------------------------------------------");
+        System.out.println("                             CITAS                               ");
+        System.out.println("-----------------------------------------------------------------");
+        for (Cita cita : citas) {
+            System.out.println("ID de la Cita: " + cita.getId());
+            System.out.println("Fecha Cita Programada: " + cita.getFechaProgramada());
+            System.out.println("Fecha Cita Registro: " + cita.getFechaRegistro());
+            System.out.println("Nombre del Paciente: " + cita.getPaciente().getNombre());
+            System.out.println("Nombre del Miembro del Personal: " + cita.getMiembroPersonal().getNombre());
+            System.out.println("-----------------------------------------------------------------");
+        }
+    }
+
     public Paciente buscarPaciente(Integer idPaciente){
         for (Paciente paciente : pacientes) {
             if(paciente.getId().equals(idPaciente)){
@@ -97,4 +111,48 @@ public class SistemaPolizas {
         }
         return null;
     }
+
+    public Cita buscarCita(Integer idCita){
+        for (Cita cita : citas) {
+            if(cita.getId().equals(idCita)){
+                return cita;
+            }
+        }
+        return null;
+    }
+
+    public void totalizarCita(int idCita) {
+        Cita cita = buscarCita(idCita);
+        if (cita != null) {
+            double totalMontosReclamados = calcularTotalMontosReclamados(cita);
+            double totalMontosPagados = calcularTotalMontosPagados(cita);
+            double diferencia = totalMontosReclamados - totalMontosPagados;
+
+            System.out.println("Total Montos Reclamados: " + totalMontosReclamados);
+            System.out.println("Total Montos Pagados: " + totalMontosPagados);
+            System.out.println("Diferencia: " + diferencia);
+        } else {
+            System.out.println("No se encontró una cita con el ID proporcionado.");
+        }
+    }
+
+    private double calcularTotalMontosReclamados(Cita cita) {
+        double total = 0.0;
+        for (Reclamacion reclamacion : cita.getReclamaciones()) {
+            total += reclamacion.getMontoDemandado();
+        }
+        return total;
+    }
+
+    private double calcularTotalMontosPagados(Cita cita) {
+        double total = 0.0;
+        for (Reclamacion reclamacion : cita.getReclamaciones()) {
+            if (reclamacion.getMontoPagado() != null) {
+                total += reclamacion.getMontoPagado();
+            }
+        }
+        return total;
+    }
+
+
 }
