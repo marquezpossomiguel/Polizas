@@ -239,6 +239,7 @@ public class App {
         Integer nuevoMonto = scanner.nextInt();
 
         repositorioPolizas.modificarMontoReclamado(idReclamo, nuevoMonto);
+        actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
         repositorioPolizas.listarReclamosCita(cita);
         sistemaPolizas.totalizarCita(idCita);
     }
