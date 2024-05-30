@@ -640,4 +640,43 @@ public class RepositorioPolizas {
         }
     }
 
+    public void insertarReclamoCita(Reclamacion reclamacion) {
+        String insertarCita = "INSERT INTO RECLAMACION (FECHA_INCIDENTE, FECHA_REGISTRO, MONTO_DEMANDADO, ID_CITA, ID_POLIZA) VALUES (?, ?, ?, ?, ?)";
+        try{
+            Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement(insertarCita);
+            preparedStatement.setDate(1, reclamacion.getFechaIncidente());
+            preparedStatement.setDate(2, reclamacion.getFechaRegistro());
+            preparedStatement.setInt(3, reclamacion.getMontoDemandado());
+            preparedStatement.setInt(4, reclamacion.getCita().getId());
+            preparedStatement.setInt(5, reclamacion.getPoliza().getId());
+            int filasAfectadas = preparedStatement.executeUpdate();
+            if (filasAfectadas < 1) {
+                System.out.println("No se pudo agregar la reclamacion " + reclamacion.getId() + " a la base de datos");
+                return;
+            }
+            connection.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void elimReclamoCita(Reclamacion reclamacion) {
+        String insertarCita = "DELETE FROM RECLAMACION WHERE ID = ?";
+        try{
+            Connection connection = DriverManager.getConnection(Constantes.URL, Constantes.USERNAME, Constantes.PASSWORD);
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement(insertarCita);
+            preparedStatement.setInt(1, reclamacion.getId());
+            int filasAfectadas = preparedStatement.executeUpdate();
+            if (filasAfectadas < 1) {
+                System.out.println("No se pudo eliminar la reclamacion " + reclamacion.getId() + " a la base de datos");
+                return;
+            }
+            connection.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }
