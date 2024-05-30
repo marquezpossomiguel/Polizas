@@ -76,7 +76,7 @@ public class SistemaPolizas {
     //Métodos de instancia
     public void mostrarPacientes() {
         System.out.println("--------------------------------------------------------------------------------------------");
-        System.out.println("PACIENTES");
+        System.out.println("\t\t\t\t\t\t\t\t\t\tPACIENTES");
         System.out.println("--------------------------------------------------------------------------------------------");
         for (Paciente paciente : pacientes) {
             System.out.println("Id: " + paciente.getId());
@@ -91,10 +91,10 @@ public class SistemaPolizas {
 
     public void mostrarCitas() {
         System.out.println("--------------------------------------------------------------------------------------------");
-        System.out.println("                             CITAS                               ");
+        System.out.println("\t\t\t\t\t\t\t\t\t\tCITAS");
         System.out.println("--------------------------------------------------------------------------------------------");
         for (Cita cita : citas) {
-            System.out.println("ID de la Cita: " + cita.getId());
+            System.out.println("Id: " + cita.getId());
             System.out.println("Fecha Cita Programada: " + cita.getFechaProgramada());
             System.out.println("Fecha Cita Registro: " + cita.getFechaRegistro());
             System.out.println("Nombre del Paciente: " + cita.getPaciente().getNombre());
@@ -107,7 +107,7 @@ public class SistemaPolizas {
         Paciente paciente = buscarPaciente(idPaciente);
         if (paciente != null) {
             System.out.println("--------------------------------------------------------------------------------------------");
-            System.out.println("CITAS DEL PACIENTE: " + paciente.getNombre());
+            System.out.println("\t\t\t\t\t\t\t\tCITAS DEL PACIENTE " + paciente.getNombre());
             System.out.println("--------------------------------------------------------------------------------------------");
             if (paciente.getCitas() != null && !paciente.getCitas().isEmpty()) {
                 for (Cita cita : paciente.getCitas()) {
@@ -155,7 +155,7 @@ public class SistemaPolizas {
             System.out.println("Total Montos Pagados: " + totalMontosPagados);
             System.out.println("Diferencia: " + diferencia);
         } else {
-            System.out.println("No se encontró una cita con el ID proporcionado.");
+            System.out.println("No se encontró una cita con el id proporcionado.");
         }
     }
 
@@ -179,11 +179,11 @@ public class SistemaPolizas {
 
     public void mostrarPolizas () {
         System.out.println("--------------------------------------------------------------------------------------------");
-        System.out.println("PÓLIZAS");
+        System.out.println("\t\t\t\t\t\t\t\t\t\tPÓLIZAS");
         System.out.println("--------------------------------------------------------------------------------------------");
         for (Poliza poliza : polizas) {
-            System.out.println("ID: " + poliza.getId());
-            System.out.println("Número de Póliza: " + poliza.getNumero());
+            System.out.println("Id: " + poliza.getId());
+            System.out.println("Número de póliza: " + poliza.getNumero());
             System.out.println("Cobertura: " + poliza.getCobertura());
             System.out.println("Paciente: " + poliza.getPaciente().getNombre());
             System.out.println("Compañía de Seguros: " + poliza.getCompaniaSeguros().getNombre());
@@ -204,11 +204,11 @@ public class SistemaPolizas {
         Cita cita = buscarCita(idCita);
         if (cita != null) {
             System.out.println("--------------------------------------------------------------------------------------------");
-            System.out.println("RECLAMOS DE LA CITA: " + cita.getId());
+            System.out.println("\t\t\t\t\t\t\t\tRECLAMOS DE LA CITA " + cita.getId());
             System.out.println("--------------------------------------------------------------------------------------------");
             if (cita.getReclamaciones() != null && !cita.getReclamaciones().isEmpty()) {
                 for (Reclamacion reclamacion : cita.getReclamaciones()) {
-                    System.out.println("ID: " + reclamacion.getId());
+                    System.out.println("Id: " + reclamacion.getId());
                     System.out.println("Accion: " + reclamacion.getAccion());
                     System.out.println("Fecha Incidente: " + reclamacion.getFechaIncidente());
                     System.out.println("Fecha Registro: " + reclamacion.getFechaRegistro());

@@ -535,9 +535,9 @@ public class RepositorioPolizas {
             consultarStatement.setInt(3, month);
             ResultSet resultSet = consultarStatement.executeQuery();
 
-            System.out.println("-------------------------------------------------");
-            System.out.println("                      CITAS                      ");
-            System.out.println("-------------------------------------------------");
+            System.out.println("--------------------------------------------------------------------------------------------");
+            System.out.println("\t\t\t\t\t\t\t\t\t\tCITAS");
+            System.out.println("--------------------------------------------------------------------------------------------");
 
             while (resultSet.next()) {
 
@@ -554,7 +554,7 @@ public class RepositorioPolizas {
                 System.out.println("Nombre del Miembro Personal: " + miembroPersonalNombre);
                 System.out.println("Fecha Programada: " + fechaHoraProgramada);
                 //System.out.println("Fecha Registro: " + fechaHoraRegistro);
-                System.out.println("-------------------------------------------------");
+                System.out.println("--------------------------------------------------------------------------------------------");
             }
 
             if (!citasEncontradas) {
@@ -582,7 +582,7 @@ public class RepositorioPolizas {
                 System.out.println("Monto Reclamado: " + montoReclamado);
                 System.out.println("Monto Pagado: " + montoPagado);
                 System.out.println("Diferencia: " + diferencia);
-                System.out.println("----------------------------");
+                System.out.println("--------------------------------------------------------------------------------------------");
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -598,10 +598,10 @@ public class RepositorioPolizas {
              PreparedStatement pstmt = connection.prepareStatement(listarSinMonto);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
-                System.out.println("ID de la Cita: " + rs.getInt("ID"));
+                System.out.println("Id de la Cita: " + rs.getInt("ID"));
                 System.out.println("Fecha Cita Programada: " + rs.getDate("FECHA_HORA_PROGRAMADA"));
                 System.out.println("Nombre del Paciente: " + rs.getString("NOMBRE"));
-                System.out.println("----------------------------");
+                System.out.println("--------------------------------------------------------------------------------------------");
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

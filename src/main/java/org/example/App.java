@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class App {
     public static void main( String[] args ) {
-        //Objetos y varibales para manejar la correcta entrada de datos
+        //Objetos y variables para manejar la correcta entrada de datos
         Scanner scanner = new Scanner(System.in);
         SistemaPolizas sistemaPolizas = new SistemaPolizas();
         sistemaPolizas.setNombre("PUJ");
@@ -23,15 +23,15 @@ public class App {
         MiembroPersonal usuarioLogIn = null;
         actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
 
+        System.out.println("--------------------------------------------------------------------------------------------");
+        System.out.println("\t\t\t\t\t\t\t\t\t\tLogIn");
+        System.out.println("--------------------------------------------------------------------------------------------");
         //Validar inicio de sesión
         do {
             datoCorrecto = false;
             usuarioEncontrado = false;
             while (datoCorrecto == false) {
                 try {
-                    System.out.println("------------------------------------------------");
-                    System.out.println("LogIn");
-                    System.out.println("------------------------------------------------");
                     System.out.println("Digite el nombre de usuario: ");
                     usuarioCuenta = scanner.nextLine();
                     System.out.println("Digite la contrasenia: ");
@@ -40,6 +40,7 @@ public class App {
                     scanner.nextLine();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    scanner.nextLine();
                 }
             }
             for (MiembroPersonal miembroPersonal : sistemaPolizas.getMiembrosPersonal()) {
@@ -51,11 +52,11 @@ public class App {
         } while (usuarioEncontrado == false);
 
         //Menú del sistema de polizas
+        System.out.println("--------------------------------------------------------------------------------------------");
+        System.out.println("\t\t\t\t\t\t\t\tSISTEMA DE POLIZAS " + sistemaPolizas.getNombre());
+        System.out.println("--------------------------------------------------------------------------------------------");
         do {
             opcionCorrecta = false;
-            System.out.println("--------------------------------------------------------------------------------------------");
-            System.out.println("Sistema de Polizas " + sistemaPolizas.getNombre());
-            System.out.println("--------------------------------------------------------------------------------------------");
             System.out.println("Digite la opcion que quiere ejecutar: ");
             System.out.println("\t(1) Iniciar registro cita");
             System.out.println("\t(2) Actualizar monto pagado");
@@ -65,7 +66,6 @@ public class App {
                     System.out.print("Respuesta: ");
                     opcionMenu = scanner.nextInt();
                     opcionCorrecta = true;
-                    scanner.nextLine();
                 } catch (Exception e) {
                     e.printStackTrace();
                     scanner.nextLine();
@@ -86,17 +86,19 @@ public class App {
                 case 3:
                     System.out.println("--------------------------------------------------------------------------------------------");
                     System.out.println("Gracias, vuelva pronto");
-                    return;
+                    System.out.println();
+                    break;
                 default:
                     System.out.println("--------------------------------------------------------------------------------------------");
                     System.out.println("El numero ingresado no corresponde a ninguna de las opciones permitidas");
                     System.out.println();
                     break;
             }
-        } while (true);
+        } while (opcionMenu != 3);
+        scanner.close();
     }
 
-    //Actuliza el repositorio de polizas para que el usuario intertue con los datos actualizados
+    //Actuliza el repositorio de polizas para que el usuario interactue con los datos actualizados
     public static void actulizarRepositorioPolizas(SistemaPolizas sistemaPolizas, RepositorioPolizas repositorioPolizas){
         repositorioPolizas.cargarMiembrosPersonal(sistemaPolizas);
         repositorioPolizas.cargarPacientes(sistemaPolizas);
@@ -123,22 +125,21 @@ public class App {
     //Opción A, 2
     public static void agregarReclamoCita(SistemaPolizas sistemaPolizas, RepositorioPolizas repositorioPolizas, Scanner scanner){
         sistemaPolizas.mostrarPolizas();
-        System.out.println("Seleccione el ID de la poliza:");
+        System.out.println("Seleccione el id de la poliza: ");
         Integer idPoliza = scanner.nextInt();
 
-        // Buscar la póliza, conf si existe
+        // Buscar la póliza
         Poliza polizaSeleccionada = sistemaPolizas.buscarPoliza(idPoliza);
         if (polizaSeleccionada != null) {
             Integer idPaciente = polizaSeleccionada.getPaciente().getId();
             Cita citaSeleccionada = null;
 
-            // Guia: Mostrar las citas del paciente asociado a la póliza anterior, basicamente la cita y la poliza se relacionan por el paciente id
+            // Mostrar las citas del paciente asociado a la póliza anterior, basicamente la cita y la poliza se relacionan por el paciente id
             sistemaPolizas.mostrarCitas(idPaciente);
-            System.out.println("Ingrese el ID de la cita en donde desea añadir el reclamo:");
+            System.out.println("Ingrese el id de la cita en donde desea añadir la reclamación: ");
             Integer idCita = scanner.nextInt();
-            scanner.nextLine();
 
-            // Guia: Se busca la cita, conf si existe
+            // Se busca la cita
             for (Cita cita : sistemaPolizas.getCitas()) {
                 if (cita.getId().equals(idCita) && cita.getPaciente().getId().equals(idPaciente)) {
                     citaSeleccionada = cita;
@@ -146,11 +147,10 @@ public class App {
                 }
             }
             if (citaSeleccionada != null) {
-                System.out.println("Ingrese el monto reclamado:");
+                System.out.println("Ingrese el monto de la reclamación: ");
                 Integer montoReclamado = scanner.nextInt();
-                scanner.nextLine();
 
-                // Guia: Crear y agregar una nueva reclamación a la cita anterior
+                // Crear y agregar una nueva reclamación a la cita anterior
                 Reclamacion nuevaReclamacion = new Reclamacion();
                 nuevaReclamacion.setMontoDemandado(montoReclamado);
 
@@ -163,26 +163,25 @@ public class App {
                 nuevaReclamacion.setPoliza(polizaSeleccionada);
 
                 citaSeleccionada.getReclamaciones().add(nuevaReclamacion);
-
-                System.out.println("Reclamación agregada a la cita");
-
                 repositorioPolizas.insertarReclamoCita(nuevaReclamacion);
+                System.out.println("Reclamación agregada a la cita");
+                repositorioPolizas.listarReclamosCita(citaSeleccionada);
+                sistemaPolizas.totalizarCita(citaSeleccionada.getId());
             }
             else {
                 System.out.println("No se encontró una cita para el paciente asociado a esta póliza");
             }
         }
         else {
-            System.out.println("No se encontró la póliza con el ID proporcionado");
+            System.out.println("No se encontró la póliza con el id proporcionado");
         }
     }
 
     //Opción A, 3
     public static void listarReclamosCita(RepositorioPolizas repositorioPolizas, Scanner scanner) {
         // Solicitar al usuario el ID de la cita
-        System.out.println("Ingrese el ID de la cita:");
+        System.out.println("Ingrese el id de la cita: ");
         int idCita = scanner.nextInt();
-        scanner.nextLine(); // Para consumir el salto de línea
 
         // Crear la cita con el ID proporcionado
         Cita cita = new Cita();
@@ -195,29 +194,26 @@ public class App {
     //Opción A, 4
     public static void eliminarReclamoCita(SistemaPolizas sistemaPolizas, RepositorioPolizas repositorioPolizas, Scanner scanner){
         sistemaPolizas.mostrarPacientes();
-        System.out.println("Ingrese el ID del paciente:");
+        System.out.println("Ingrese el id del paciente: ");
         Integer idPaciente = scanner.nextInt();
 
         Paciente paciente = sistemaPolizas.buscarPaciente(idPaciente);
-        if (paciente != null)
-        {
+        if (paciente != null) {
             sistemaPolizas.mostrarCitas(paciente.getId());
-            System.out.println("Ingrese el ID de la cita:");
+            System.out.println("Ingrese el id de la cita: ");
             Integer idCita = scanner.nextInt();
             Cita cita = sistemaPolizas.buscarCita(idCita);
-            if (cita != null)
-            {
+            if (cita != null) {
                 sistemaPolizas.mostrarReclamos(cita.getId());
-                System.out.println("Ingrese el ID del reclamo que desea eliminar:");
+                System.out.println("Ingrese el id de la reclamación que desea eliminar: ");
                 Integer idReclamo = scanner.nextInt();
-                for (Reclamacion reclamo : cita.getReclamaciones())
-                {
-                    if(reclamo.getId().equals(idReclamo))
-                    {
+                for (Reclamacion reclamo : cita.getReclamaciones()) {
+                    if(reclamo.getId().equals(idReclamo)) {
                         cita.getReclamaciones().remove(reclamo);
-                        System.out.println("Reclamo eliminado con éxito");
                         repositorioPolizas.elimReclamoCita(reclamo);
+                        System.out.println("Reclamación eliminado con éxito");
                         repositorioPolizas.listarReclamosCita(cita);
+                        sistemaPolizas.totalizarCita(cita.getId());
                         break;
                     }
                 }
@@ -231,32 +227,26 @@ public class App {
         sistemaPolizas.mostrarCitas();
         System.out.println("Digite el id de la cita: ");
         int idCita = scanner.nextInt();
-        scanner.nextLine();
         Cita cita = sistemaPolizas.buscarCita(idCita);
 
         // Listar reclamos de la cita
         repositorioPolizas.listarReclamosCita(cita);
         System.out.println("Digite el id del reclamo a modificar: ");
         int idReclamo = scanner.nextInt();
-        scanner.nextLine();
 
         // Solicitar el nuevo monto
         System.out.println("Digite el nuevo monto reclamado: ");
         Integer nuevoMonto = scanner.nextInt();
-        scanner.nextLine();
 
         repositorioPolizas.modificarMontoReclamado(idReclamo, nuevoMonto);
-
         repositorioPolizas.listarReclamosCita(cita);
-
         sistemaPolizas.totalizarCita(idCita);
     }
 
     //Opción A, 6
     public static void totalizarCita(SistemaPolizas sistemaPolizas, Scanner scanner) {
-        System.out.println("Digite el ID de la cita que desea totalizar: ");
+        System.out.println("Digite el id de la cita que desea totalizar: ");
         int idCita = scanner.nextInt();
-        scanner.nextLine();
         sistemaPolizas.totalizarCita(idCita);
     }
 
@@ -265,11 +255,9 @@ public class App {
     public static void consultarCitasAlmacenadas(RepositorioPolizas repositorioPolizas, MiembroPersonal usuarioLogIn, Scanner scanner) {
         System.out.println("Digite el año (YYYY): ");
         int anio = scanner.nextInt();
-        scanner.nextLine();
 
         System.out.println("Digite el mes (MM): ");
         int mes = scanner.nextInt();
-        scanner.nextLine();
 
         repositorioPolizas.consultarCitasAlmacenadas(usuarioLogIn, anio, mes);
     }
@@ -294,7 +282,6 @@ public class App {
                     System.out.print("Respuesta: ");
                     opcionMenu = scanner.nextInt();
                     opcionCorrecta = true;
-                    scanner.nextLine();
                 } catch (Exception e) {
                     e.printStackTrace();
                     scanner.nextLine();
@@ -305,55 +292,48 @@ public class App {
                     System.out.println("--------------------------------------------------------------------------------------------");
                     iniciarRegistroCita(sistemaPolizas, repositorioPolizas, miembroPersonal, scanner);
                     actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
-                    System.out.println();
                     break;
                 case 2:
                     System.out.println("--------------------------------------------------------------------------------------------");
                     agregarReclamoCita(sistemaPolizas, repositorioPolizas, scanner);
                     actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
-                    System.out.println();
                     break;
                 case 3:
                     System.out.println("--------------------------------------------------------------------------------------------");
                     listarReclamosCita(repositorioPolizas, scanner);
                     actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
-                    System.out.println();
                     break;
                 case 4:
                     System.out.println("--------------------------------------------------------------------------------------------");
                     eliminarReclamoCita(sistemaPolizas, repositorioPolizas, scanner);
                     actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
-                    System.out.println();
                     break;
                 case 5:
                     System.out.println("--------------------------------------------------------------------------------------------");
                     modificarMontoReclamadoReclamoCita(sistemaPolizas, repositorioPolizas, scanner);
                     actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
-                    System.out.println();
                     break;
                 case 6:
                     System.out.println("--------------------------------------------------------------------------------------------");
                     totalizarCita(sistemaPolizas,scanner);
                     actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
-                    System.out.println();
                     break;
                 case 7:
+                    System.out.println("--------------------------------------------------------------------------------------------");
                     consultarCitasAlmacenadas(repositorioPolizas, miembroPersonal, scanner);
                     actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
-                    System.out.println();
                     break;
                 case 8:
-                    System.out.println("-----------------");
+                    System.out.println("--------------------------------------------------------------------------------------------");
+                    System.out.println("Saliendo...");
                     actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
-                    System.out.println();
-                    return;
+                    break;
                 default:
-                    System.out.println("-----------------");
+                    System.out.println("--------------------------------------------------------------------------------------------");
                     System.out.println("El numero ingresado no corresponde a ninguna de las opciones permitidas");
-                    System.out.println();
                     break;
             }
-        } while (true);
+        } while (opcionMenu != 8);
     }
 
     //Opción B
@@ -362,19 +342,17 @@ public class App {
         repositorioPolizas.listarCitasConReclamosSinMontoPagado();
         System.out.println("Digite el id de la cita: ");
         int idCita = scanner.nextInt();
-        scanner.nextLine();
         Cita cita = sistemaPolizas.buscarCita(idCita);
 
         repositorioPolizas.listarReclamosCita(cita);
         System.out.println("Digite el id del reclamo a modificar: ");
         int idReclamo = scanner.nextInt();
-        scanner.nextLine();
 
         System.out.println("Digite el monto pagado: ");
         double montoPagado = scanner.nextDouble();
-        scanner.nextLine();
 
         repositorioPolizas.actualizarMontoPagado(idReclamo, montoPagado);
+        actulizarRepositorioPolizas(sistemaPolizas, repositorioPolizas);
         repositorioPolizas.listarReclamosCita(cita);
         sistemaPolizas.totalizarCita(idCita);
     }
